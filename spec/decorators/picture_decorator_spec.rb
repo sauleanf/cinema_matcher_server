@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe PictureDecorator do
+RSpec.describe PictureDecorator, type: :decorator do
   let(:picture) { create(:picture) }
   let(:decorated_picture) { picture.decorate }
 
