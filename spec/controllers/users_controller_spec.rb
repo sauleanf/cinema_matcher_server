@@ -7,10 +7,6 @@ describe UsersController, type: :controller do
     JsonWebToken.encode({ user_id: user.id })
   end
 
-  def expect_auth_to_fail
-    expect(response.body).to eq({ message: "Authentication is required" }.to_json)
-  end
-
   context "when not authenticated" do
     describe "GET show" do
       it "returns an error" do
