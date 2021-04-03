@@ -29,4 +29,8 @@ class User < ApplicationRecord
     @password = Password.create(new_password)
     self.hashed_password = @password
   end
+
+  def acquaintances
+    followees | followers
+  end
 end

@@ -1,45 +1,45 @@
 class UsersController < ApplicationController
-  before_action :user, only: %i[ show update destroy ]
+  before_action :authorized?, only: %i[ show update destroy ]
 
   def show
-    if user
-      render json: user.decorate, status: :ok
-    else
-      render json: {}, status: :not_found
-    end
+    render json: current_user.decorate, status: :ok
+  end
+
+  def follow
+    followee_id = params[:followee_id]
+    followee = User.find(followee_id)
+    current_user.follower(followee_id)
+
+    render json: followee.decorate, status: :ok
   end
 
   def create
     @user = User.new(create_user_params)
-    user.password = create_user_params.fetch(:password)
+    @user.password = create_user_params.fetch(:password)
 
     if @user.save
-      render json: user.decorate, status: :ok
+      render json: @user.decorate, status: :ok
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: @user.errors, status: :unprocessable_entity
     end
   end
 
   def update
-    user.assign_attributes(user_params)
+    current_user.assign_attributes(user_params)
 
-    if @user.save
-      render json: UserDecorator.decorate(user), status: :ok
+    if current_user.save
+      render json: current_user.decorate, status: :ok
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: current_user.errors, status: :unprocessable_entity
     end
   end
 
   def destroy
-    user.destroy
-    render json: user.decorate, status: :ok
+    current_user.destroy
+    render json: current_user.decorate, status: :ok
   end
 
   private
-
-  def user
-    @user ||= User.find(params[:id])
-  end
 
   def user_params
     params.require(:user).permit(:username, :email, :fullname)

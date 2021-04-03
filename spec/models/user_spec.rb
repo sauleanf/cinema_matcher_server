@@ -28,4 +28,18 @@ RSpec.describe User, type: :model do
       expect(user.password).to eq(new_password)
     end
   end
+
+  context "User#acquaintances" do
+    let(:follower) { create(:user) }
+    before do
+      user.follow(user_to_follow.id)
+      follower.follow(user.id)
+      user.reload
+    end
+
+    it "displays the two users as acquaintances" do
+      expect(user.acquaintances).to include(follower)
+      expect(user.acquaintances).to include(user_to_follow)
+    end
+  end
 end
