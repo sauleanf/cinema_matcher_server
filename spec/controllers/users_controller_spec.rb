@@ -45,7 +45,7 @@ describe UsersController, type: :controller do
     end
 
     describe "PUT update" do
-      it "returns the user with the right id" do
+      it "returns an error" do
         get :show, params: { id: user.id }
         expect_auth_to_fail
       end
@@ -54,6 +54,13 @@ describe UsersController, type: :controller do
     describe "DELETE delete" do
       it "returns the user with the right id" do
         get :show, params: { id: user.id }
+        expect_auth_to_fail
+      end
+    end
+
+    describe "POST follow" do
+      it "returns an error" do
+        post :follow, params: { followee_id: second_user.id }
         expect_auth_to_fail
       end
     end
@@ -98,6 +105,16 @@ describe UsersController, type: :controller do
       it "returns the user in the response" do
         delete :destroy, params: { id: user.id }
         expect(response.body).to eq(user.decorate.to_json)
+      end
+    end
+
+    describe "POST follow" do
+      it "updates the user to follow another user" do
+        post :follow, params: { followee_id: second_user.id }
+        user.reload
+        second_user.reload
+        expect(user.followees).to include(second_user)
+        expect(second_user.followers).to include(user)
       end
     end
   end

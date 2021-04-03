@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[ show update destroy ]
+  before_action :authorized?, only: %i[ show update destroy follow ]
 
   def show
     render json: current_user.decorate, status: :ok
@@ -8,7 +8,7 @@ class UsersController < ApplicationController
   def follow
     followee_id = params[:followee_id]
     followee = User.find(followee_id)
-    current_user.follower(followee_id)
+    current_user.follow(followee_id)
 
     render json: followee.decorate, status: :ok
   end
