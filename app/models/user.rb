@@ -14,8 +14,8 @@ class User < ApplicationRecord
   has_many :followers, class_name: 'User', through: :followee_followings
   has_many :followees, class_name: 'User', through: :follower_followings
 
-  has_many :rooms
   has_many :room_users
+  has_many :rooms, through: :room_users
 
   def follow(followee_id)
     Following.create!(follower_id: id, followee_id: followee_id)

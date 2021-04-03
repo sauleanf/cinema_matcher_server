@@ -1,6 +1,6 @@
 require "rails_helper"
 
-describe UserDecorator do
+describe UserDecorator, type: :decorator do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
   let(:decorated_user) { user.decorate }
@@ -11,6 +11,9 @@ describe UserDecorator do
     expect(decorated_user.email).to eq(user.email)
     expect(decorated_user.fullname).to eq(user.fullname)
     expect(decorated_user.profile_image).to eq(user.profile_image)
+  end
+
+  it "conceals the password field" do
     expect(decorated_user).not_to respond_to(:password)
   end
 end

@@ -2,54 +2,29 @@ class RoomsController < ApplicationController
   before_action :authorized?
 
   def index
-
+    render json: current_user.rooms
   end
 
   def show
-    if user
-      render json: user.decorate, status: :ok
-    else
-      render json: {}, status: :not_found
-    end
+    render json: current_user.rooms.find(params[:id])
   end
 
   def create
-    @user = User.new(create_user_params)
-    user.password = create_user_params.fetch(:password)
+    user_ids = params[:room][:user_ids]
+    users = User.where(id: user_ids)
+    room = Room.new
+    room.users = users
 
-    if @user.save
-      render json: user.decorate, status: :ok
+    if room.save
+      render json: room.decorate, status: :ok
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: room.errors, status: :unprocessable_entity
     end
-  end
-
-  def update
-    user.assign_attributes(user_params)
-
-    if @user.save
-      render json: UserDecorator.decorate(user), status: :ok
-    else
-      render json: user.errors, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    user.destroy
-    render json: user.decorate, status: :ok
   end
 
   private
 
-  def user
-    @user ||= User.find(params[:id])
-  end
-
-  def user_params
-    params.require(:user).permit(:username, :email, :fullname)
-  end
-
-  def create_user_params
-    params.require(:user).permit(:username, :email, :fullname, :password)
+  def create_room_params
+    params.require(:room).permit(:user_ids)
   end
 end

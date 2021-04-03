@@ -5,6 +5,12 @@ Rails.application.routes.draw do
     scope 'users' do
       post 'follow', to: 'users#follow'
     end
+
+    scope 'rooms' do
+      get 'index', to: 'rooms#index'
+      get 'show', to: 'rooms#show'
+      post 'create', to: 'rooms#create'
+    end
   end
 
   post 'login', to: 'auth#login'

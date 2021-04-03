@@ -42,4 +42,20 @@ RSpec.describe User, type: :model do
       expect(user.acquaintances).to include(user_to_follow)
     end
   end
+
+  context "User#rooms" do
+    let(:room) do
+      room = Room.new
+      room.users << user
+      room.save!
+
+      user.reload
+
+      room
+    end
+
+    it "shows the users rooms" do
+      expect(user.rooms).to include(room)
+    end
+  end
 end
