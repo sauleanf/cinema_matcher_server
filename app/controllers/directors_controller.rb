@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 class DirectorsController < ApplicationController
   def index
-
     decorated_directors = DirectorDecorator.decorate_collection(directors)
     render json: {
       directors: decorated_directors,

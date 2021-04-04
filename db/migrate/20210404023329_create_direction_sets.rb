@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateDirectionSets < ActiveRecord::Migration[6.1]
   def change
     create_table :director_sets do |t|
@@ -7,6 +9,6 @@ class CreateDirectionSets < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index(:director_sets, [:director_id, :picture_id], unique: true)
+    add_index(:director_sets, %i[director_id picture_id], unique: true)
   end
 end

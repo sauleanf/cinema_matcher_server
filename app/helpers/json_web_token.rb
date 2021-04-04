@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class JsonWebToken
   def self.encode(payload)
     JWT.encode(payload, secret)
@@ -6,8 +8,6 @@ class JsonWebToken
   def self.decode(token)
     HashWithIndifferentAccess.new(JWT.decode(token, secret).first)
   end
-
-  private
 
   def self.secret
     Rails.application.credentials.secret_key_base

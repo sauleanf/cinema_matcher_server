@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 class ApplicationController < ActionController::Base
   def encode_token(payload)
     JWT.encode(payload, secret)
   end
 
   def current_user
-    if decoded_token
-      user_id = decoded_token[0]["user_id"]
-      @current_user ||= User.find_by(id: user_id)
-    end
+    return unless decoded_token
+
+    user_id = decoded_token[0]['user_id']
+    @current_user ||= User.find_by(id: user_id)
   end
 
   private
@@ -22,12 +24,12 @@ class ApplicationController < ActionController::Base
   end
 
   def decoded_token
-    if authenticated?
-      begin
-        JWT.decode(token, secret, false)
-      rescue JWT::DecodeError => e
-        nil
-      end
+    return unless authenticated?
+
+    begin
+      JWT.decode(token, secret, false)
+    rescue JWT::DecodeError => e
+      nil
     end
   end
 

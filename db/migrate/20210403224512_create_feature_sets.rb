@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFeatureSets < ActiveRecord::Migration[6.1]
   def change
     create_table :feature_sets do |t|

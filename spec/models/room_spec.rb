@@ -1,4 +1,6 @@
-require "rails_helper"
+# frozen_string_literal: true
+
+require 'rails_helper'
 
 RSpec.describe Room, type: :model do
   let(:user) { create(:user) }
@@ -13,8 +15,8 @@ RSpec.describe Room, type: :model do
     room
   end
 
-  context "Room#users" do
-    it "shows the users in the room" do
+  context 'Room#users' do
+    it 'shows the users in the room' do
       expect(room.users).to include(user)
       expect(room.users).to include(second_user)
     end

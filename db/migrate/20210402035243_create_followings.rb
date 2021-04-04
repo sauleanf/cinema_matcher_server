@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateFollowings < ActiveRecord::Migration[6.1]
   def change
     create_table :followings do |t|
@@ -7,6 +9,6 @@ class CreateFollowings < ActiveRecord::Migration[6.1]
       t.timestamps
     end
 
-    add_index(:followings, [:followee_id, :follower_id], unique: true)
+    add_index(:followings, %i[followee_id follower_id], unique: true)
   end
 end

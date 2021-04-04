@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[ show update destroy follow ]
+  before_action :authorized?, only: %i[show update destroy follow]
 
   def show
     render json: current_user.decorate, status: :ok

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PicturesController < ApplicationController
   def index
     decorated_pictures = PictureDecorator.decorate_collection(pictures)

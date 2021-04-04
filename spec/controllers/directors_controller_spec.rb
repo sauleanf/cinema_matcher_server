@@ -1,4 +1,6 @@
-require "rails_helper"
+# frozen_string_literal: true
+
+require 'rails_helper'
 
 describe DirectorsController, type: :controller do
   let(:num_pages) { 3 }
@@ -15,8 +17,8 @@ describe DirectorsController, type: :controller do
     ]
   end
 
-  describe "GET index" do
-    it "returns pages" do
+  describe 'GET index' do
+    it 'returns pages' do
       page = 0
       num_pages.times.each do |i|
         page = i + 1
@@ -34,10 +36,10 @@ describe DirectorsController, type: :controller do
     end
   end
 
-  describe "GET show" do
+  describe 'GET show' do
     let!(:director) { first_page_directors.first }
 
-    it "returns an error" do
+    it 'returns an error' do
       get :show, params: { id: director.id }
 
       expect(response_body).to eq(director.decorate.as_json)
