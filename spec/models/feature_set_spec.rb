@@ -12,10 +12,15 @@ RSpec.describe FeatureSet, type: :model do
     end
   end
 
-  describe 'FeatureSet#set_genere' do
-    it 'sets the genre to true based on arg' do
-      feature_set.set_genre(:drama)
-      expect(feature_set.drama).to be(true)
+  describe 'FeatureSet#get_genere and FeatureSet#set_genre' do
+    it 'gets and sets the genre' do
+      FeatureSet::GENERES.map do |genre|
+        feature_set.set_genre(genre, false)
+        expect(feature_set.get_genre(genre)).to be(false)
+
+        feature_set.set_genre(genre)
+        expect(feature_set.get_genre(genre)).to be(true)
+      end
     end
   end
 end

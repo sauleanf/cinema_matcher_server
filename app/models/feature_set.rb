@@ -15,7 +15,7 @@ class FeatureSet < ApplicationRecord
     mystery
     romance
     scifi
-    sbkrt
+    short
     sport
     superhero
     thriller
@@ -23,7 +23,11 @@ class FeatureSet < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  def set_genre(genre)
-    send("#{genre}=", true)
+  def set_genre(genre, val=true)
+    send("#{genre}=", val)
+  end
+
+  def get_genre(genre)
+    send(genre)
   end
 end
