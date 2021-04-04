@@ -24,6 +24,6 @@ class FeatureSet < ApplicationRecord
   belongs_to :parent, polymorphic: true
 
   def set_genre(genre)
-    self.send("#{genre.to_s}=", true)
+    send("#{genre}=", true)
   end
 end

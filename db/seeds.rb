@@ -3,18 +3,18 @@
 require 'csv'
 
 class PictureSeeder
-  def self.seed(destroy_all=true)
+  def self.seed(destroy_all = true)
     if destroy_all
       Picture.destroy_all
-      puts "Destroy all previous pictures"
-      puts "=" * 60
+      puts 'Destroy all previous pictures'
+      puts '=' * 60
     end
 
-    imdb_pictures =  File.open('data.tsv').read
+    imdb_pictures = File.open('data.tsv').read
 
     index = 0
     imdb_pictures.each_line do |line|
-      if index > 0
+      if index.positive?
 
         row = line.split("\t")
 
@@ -23,7 +23,7 @@ class PictureSeeder
                        .map { |genre| genre.strip.downcase.to_sym }
                        .filter { |genre| FeatureSet::GENERES.include? genre }
         name = row[2]
-        genres << :adult if !!(row[4])
+        genres << :adult unless (row[4]).nil?
         year = row[5].to_i
         released_at = DateTime.new(year)
 
@@ -45,10 +45,9 @@ class PictureSeeder
       index += 1
     end
 
-    puts "=" * 60
-    puts "Added all pictures from IMDB"
+    puts '=' * 60
+    puts 'Added all pictures from IMDB'
   end
 end
 
 PictureSeeder.seed
-
