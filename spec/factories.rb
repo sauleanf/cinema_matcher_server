@@ -1,4 +1,24 @@
 FactoryBot.define do
+  factory :feature_set do
+    action { true }
+    adventure { true }
+    animation { false }
+    comedy { false }
+    crime { false }
+    drama { false }
+    fantasy { false }
+    horror { true }
+    mystery { true }
+    romance { false }
+    scifi { true }
+    superhero { false }
+    thriller { false }
+
+    year { 2017 }
+    length { 221 }
+  end
+
+
   factory :picture do
     name { "Dark Knight" }
     description { "The criminals of Gotham City are running scared" }

@@ -15,16 +15,24 @@ ActiveRecord::Schema.define(version: 2021_04_03_224512) do
   create_table "feature_sets", force: :cascade do |t|
     t.string "parent_type"
     t.integer "parent_id"
+    t.boolean "action"
+    t.boolean "adventure"
+    t.boolean "animation"
+    t.boolean "comedy"
+    t.boolean "crime"
+    t.boolean "drama"
+    t.boolean "fantasy"
+    t.boolean "horror"
+    t.boolean "mystery"
+    t.boolean "romance"
+    t.boolean "scifi"
+    t.boolean "superhero"
+    t.boolean "thriller"
+    t.integer "year"
+    t.integer "length"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["parent_type", "parent_id"], name: "index_feature_sets_on_parent"
-  end
-
-  create_table "features", force: :cascade do |t|
-    t.string "feature_type"
-    t.float "datum"
-    t.integer "feature_set_id"
-    t.index ["feature_set_id"], name: "index_features_on_feature_set_id"
   end
 
   create_table "followings", force: :cascade do |t|
