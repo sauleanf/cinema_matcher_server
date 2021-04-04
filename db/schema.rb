@@ -10,22 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_03_224512) do
+ActiveRecord::Schema.define(version: 2021_04_04_023329) do
+
+  create_table "director_sets", force: :cascade do |t|
+    t.integer "director_id"
+    t.integer "picture_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["director_id", "picture_id"], name: "index_director_sets_on_director_id_and_picture_id", unique: true
+  end
+
+  create_table "directors", force: :cascade do |t|
+    t.string "fullname"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "feature_sets", force: :cascade do |t|
     t.string "parent_type"
     t.integer "parent_id"
+    t.boolean "adult"
     t.boolean "action"
     t.boolean "adventure"
     t.boolean "animation"
     t.boolean "comedy"
     t.boolean "crime"
+    t.boolean "documentary"
     t.boolean "drama"
     t.boolean "fantasy"
     t.boolean "horror"
     t.boolean "mystery"
     t.boolean "romance"
     t.boolean "scifi"
+    t.boolean "sport"
     t.boolean "superhero"
     t.boolean "thriller"
     t.integer "year"

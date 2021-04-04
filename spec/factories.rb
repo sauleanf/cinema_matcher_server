@@ -1,4 +1,8 @@
 FactoryBot.define do
+  factory :director do
+    fullname { "Stephen Baker" }
+  end
+
   factory :feature_set do
     action { true }
     adventure { true }
@@ -25,6 +29,12 @@ FactoryBot.define do
     image { "dark_night.png" }
 
     released_at { DateTime.now }
+
+    after(:create) do |picture, evaluator|
+      create_list(:director, 2, pictures: [picture])
+
+      picture.reload
+    end
   end
 
   factory :user do

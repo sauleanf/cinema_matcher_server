@@ -16,7 +16,7 @@ describe PicturesController, type: :controller do
   end
 
   describe "GET index" do
-    it "returns an error" do
+    it "returns pages" do
       page = 0
       num_pages.times.each do |i|
         page = i + 1
@@ -24,8 +24,7 @@ describe PicturesController, type: :controller do
 
         pictures = PictureDecorator.decorate_collection(pages_of_pictures[i])
 
-        body = HashWithIndifferentAccess.new(JSON.parse(response.body))
-        received_pictures = body.fetch(:pictures)
+        received_pictures = response_body.fetch(:pictures)
 
         expect(received_pictures.size).to eq(per_page)
         expect(received_pictures).to eq(pictures.as_json)
@@ -41,9 +40,7 @@ describe PicturesController, type: :controller do
     it "returns an error" do
       get :show, params: { id: picture.id }
 
-      body = HashWithIndifferentAccess.new(JSON.parse(response.body))
-
-      expect(body).to eq(picture.decorate.as_json)
+      expect(response_body).to eq(picture.decorate.as_json)
     end
   end
 end

@@ -1,11 +1,10 @@
 class PicturesController < ApplicationController
   def index
-    @pictures = Picture.page(page)
-    decorated_pictures = PictureDecorator.decorate_collection(@pictures)
+    decorated_pictures = PictureDecorator.decorate_collection(pictures)
     render json: {
       pictures: decorated_pictures,
       page: page,
-      count: @pictures.total_count
+      count: pictures.total_count
     }, status: :ok
   end
 
@@ -15,8 +14,12 @@ class PicturesController < ApplicationController
 
   private
 
+  def pictures
+    @pictures = Picture.page(page)
+  end
+
   def picture
-    @picture ||= Picture.find(params[:id])
+    @picture = Picture.find(params[:id])
   end
 
   def page

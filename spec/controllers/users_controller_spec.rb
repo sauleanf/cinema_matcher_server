@@ -3,9 +3,7 @@ require "rails_helper"
 describe UsersController, type: :controller do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
-  let!(:token) do
-    JsonWebToken.encode({ user_id: user.id })
-  end
+  let!(:token) { JsonWebToken.encode({ user_id: user.id }) }
 
   context "when not authenticated" do
     describe "GET show" do
@@ -36,7 +34,7 @@ describe UsersController, type: :controller do
       it "returns the user in the response" do
         post :create, params: { user: user_params }
         new_user = User.last
-        expect(response.body).to eq(new_user.decorate.to_json)
+        expect(response_body).to eq(new_user.decorate.as_json)
       end
     end
 
@@ -70,7 +68,7 @@ describe UsersController, type: :controller do
     describe "GET show" do
       it "returns the user with the right id" do
         get :show, params: { id: user.id }
-        expect(response.body).to eq(user.decorate.to_json)
+        expect(response_body).to eq(user.decorate.as_json)
       end
     end
 
@@ -88,7 +86,7 @@ describe UsersController, type: :controller do
         user.reload
         expect(user).to have_attributes(update_user_params.except!(:password))
 
-        expect(JSON.parse(response.body)).to include(update_user_params)
+        expect(response_body).to include(update_user_params)
       end
     end
 
@@ -100,15 +98,17 @@ describe UsersController, type: :controller do
 
       it "returns the user in the response" do
         delete :destroy, params: { id: user.id }
-        expect(response.body).to eq(user.decorate.to_json)
+        expect(response_body).to eq(user.decorate.as_json)
       end
     end
 
     describe "POST follow" do
       it "updates the user to follow another user" do
         post :follow, params: { followee_id: second_user.id }
+
         user.reload
         second_user.reload
+
         expect(user.followees).to include(second_user)
         expect(second_user.followers).to include(user)
       end
