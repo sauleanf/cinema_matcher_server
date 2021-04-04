@@ -11,11 +11,20 @@ class RoomsController < ApplicationController
     render json: current_user.rooms.find(params[:id])
   end
 
+  def add
+    room = Room.find(params[:id])
+    room.users += new_users
+
+    if room.save
+      render json: room.decorate, status: :ok
+    else
+      render json: room.errors, status: :unprocessable_entity
+    end
+  end
+
   def create
-    user_ids = params[:room][:user_ids]
-    users = User.where(id: user_ids)
     room = Room.new
-    room.users = users
+    room.users << current_user
 
     if room.save
       render json: room.decorate, status: :ok
@@ -26,7 +35,11 @@ class RoomsController < ApplicationController
 
   private
 
-  def create_room_params
-    params.require(:room).permit(:user_ids)
+  def new_users
+    User.where(id: room_params[:user_ids])
+  end
+
+  def room_params
+    params.require(:room).permit(:id, user_ids: [])
   end
 end

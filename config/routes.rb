@@ -14,6 +14,10 @@ Rails.application.routes.draw do
       get 'index', to: 'rooms#index'
       get 'show', to: 'rooms#show'
       post 'create', to: 'rooms#create'
+
+      scope 'add' do
+        post 'add', to: 'rooms#add'
+      end
     end
   end
 

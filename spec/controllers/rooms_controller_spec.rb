@@ -59,9 +59,7 @@ describe RoomsController, type: :controller do
     end
 
     describe 'GET show' do
-      let!(:room) do
-        Room.create(users: [user])
-      end
+      let(:room) { rooms.first }
 
       it 'returns an error' do
         get :show, params: { id: room.id }
@@ -72,13 +70,33 @@ describe RoomsController, type: :controller do
     describe 'POST create' do
       it 'creates a new room with the right data' do
         expect do
-          post :create, params: { room: { user_ids: [user.id, second_user.id] } }
+          post :create
         end.to change(Room, :count).by(1)
 
         room = Room.last
 
-        expect(room.users).to include(second_user)
         expect(room.users).to include(user)
+      end
+    end
+
+    describe 'POST add' do
+      let!(:room) { Room.create(users: [user]) }
+      let!(:third_user) { create(:user) }
+
+      it 'adds the user to the room' do
+        post :add, params: { id: room.id, room: { user_ids: [second_user.id, third_user.id] } }
+        room.reload
+
+        expect(room.users).to include(user)
+        expect(room.users).to include(second_user)
+        expect(room.users).to include(third_user)
+      end
+
+      it 'returns room' do
+        post :add, params: { id: room.id, room: { user_ids: [second_user.id] } }
+        room.reload
+
+        expect(response_body).to eq(room.decorate.as_json)
       end
     end
   end
