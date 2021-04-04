@@ -23,7 +23,7 @@ class FeatureSet < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  def set_genre(genre, val=true)
+  def set_genre(genre, val = true)
     send("#{genre}=", val)
   end
 
