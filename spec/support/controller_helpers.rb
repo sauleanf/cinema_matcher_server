@@ -6,7 +6,12 @@ module ControllerHelpers
   end
 
   def response_body
-    HashWithIndifferentAccess.new(JSON.parse(response.body))
+    body = JSON.parse(response.body)
+    if body.is_a? Array
+      body.map { |obj| HashWithIndifferentAccess.new(obj) }
+    else
+      HashWithIndifferentAccess.new(body)
+    end
   end
 end
 

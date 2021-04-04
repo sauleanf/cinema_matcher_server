@@ -2,5 +2,5 @@
 
 class PictureDecorator < Draper::Decorator
   delegate_all
-  decorates_associations :directors
+  decorates_associations :directors, with: DirectorDecorator
 end

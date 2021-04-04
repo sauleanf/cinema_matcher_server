@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_404_023_329) do
+ActiveRecord::Schema.define(version: 20_210_404_195_409) do
   create_table 'director_sets', force: :cascade do |t|
     t.integer 'director_id'
     t.integer 'picture_id'
@@ -53,12 +53,19 @@ ActiveRecord::Schema.define(version: 20_210_404_023_329) do
     t.index %w[parent_type parent_id], name: 'index_feature_sets_on_parent'
   end
 
-  create_table 'followings', force: :cascade do |t|
-    t.integer 'followee_id'
-    t.integer 'follower_id'
+  create_table 'friend_requests', force: :cascade do |t|
+    t.integer 'user_id'
+    t.integer 'other_user_id'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.index %w[followee_id follower_id], name: 'index_followings_on_followee_id_and_follower_id', unique: true
+    t.string 'status', default: 'pending'
+  end
+
+  create_table 'friendships', force: :cascade do |t|
+    t.integer 'first_user_id'
+    t.integer 'second_user_id'
+    t.datetime 'created_at', precision: 6, null: false
+    t.datetime 'updated_at', precision: 6, null: false
   end
 
   create_table 'pictures', force: :cascade do |t|

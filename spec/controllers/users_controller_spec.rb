@@ -53,13 +53,6 @@ describe UsersController, type: :controller do
         expect_auth_to_fail
       end
     end
-
-    describe 'POST follow' do
-      it 'returns an error' do
-        post :follow, params: { followee_id: second_user.id }
-        expect_auth_to_fail
-      end
-    end
   end
 
   context 'when authenticated' do
@@ -76,11 +69,11 @@ describe UsersController, type: :controller do
 
     describe 'PUT create' do
       let(:update_user_params) do
-        HashWithIndifferentAccess.new({
-                                        username: 'harryp',
-                                        fullname: 'harry potter',
-                                        email: 'harryp@gmail.com'
-                                      })
+        {
+          username: 'harryp',
+          fullname: 'harry potter',
+          email: 'harryp@gmail.com'
+        }
       end
 
       it 'updates an user' do
@@ -101,18 +94,6 @@ describe UsersController, type: :controller do
       it 'returns the user in the response' do
         delete :destroy, params: { id: user.id }
         expect(response_body).to eq(user.decorate.as_json)
-      end
-    end
-
-    describe 'POST follow' do
-      it 'updates the user to follow another user' do
-        post :follow, params: { followee_id: second_user.id }
-
-        user.reload
-        second_user.reload
-
-        expect(user.followees).to include(second_user)
-        expect(second_user.followers).to include(user)
       end
     end
   end

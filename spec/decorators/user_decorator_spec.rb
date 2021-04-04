@@ -3,9 +3,19 @@
 require 'rails_helper'
 
 describe UserDecorator, type: :decorator do
+  let(:num_friends) { 5 }
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
-  let(:decorated_user) { user.decorate }
+  let(:friendship) do
+    friend_request = user.send_friend_request(second_user)
+    data = second_user.accept_friend_request(friend_request)
+    data.fetch(:friendship)
+  end
+
+  let(:decorated_user) do
+    user.reload
+    user.decorate
+  end
 
   it 'delegates the right fields' do
     expect(decorated_user.id).to eq(user.id)
@@ -17,5 +27,9 @@ describe UserDecorator, type: :decorator do
 
   it 'conceals the password field' do
     expect(decorated_user).not_to respond_to(:password)
+  end
+
+  it 'decorates the associations' do
+    expect(decorated_user.friends).to be_decorated
   end
 end

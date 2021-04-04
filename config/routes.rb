@@ -1,13 +1,23 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  resources :directors
-  resources :pictures
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   scope 'api/v1' do
     resources :users
-    scope 'users' do
-      post 'follow', to: 'users#follow'
+    resources :directors
+    resources :pictures
+
+    scope 'friends' do
+      scope 'sent' do
+        get 'index', to: 'sent_friend_requests#index'
+        delete 'rescind', to: 'sent_friend_requests#rescind'
+      end
+
+      scope 'incoming' do
+        get 'index', to: 'incoming_friend_requests#index'
+        put 'accept', to: 'incoming_friend_requests#accept'
+        delete 'reject', to: 'incoming_friend_requests#reject'
+      end
     end
 
     scope 'rooms' do
