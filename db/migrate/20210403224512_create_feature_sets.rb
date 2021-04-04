@@ -17,6 +17,7 @@ class CreateFeatureSets < ActiveRecord::Migration[6.1]
       t.boolean :mystery
       t.boolean :romance
       t.boolean :scifi
+      t.boolean :short
       t.boolean :sport
       t.boolean :superhero
       t.boolean :thriller
