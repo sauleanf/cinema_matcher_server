@@ -7,6 +7,13 @@ Rails.application.routes.draw do
     resources :directors
     resources :pictures
 
+    scope 'auth' do
+      post 'login', to: 'auth#login'
+      scope 'google' do
+        post 'google_login', to: 'auth#google_login'
+      end
+    end
+
     scope 'friends' do
       scope 'sent' do
         get 'index', to: 'sent_friend_requests#index'

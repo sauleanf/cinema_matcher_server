@@ -58,4 +58,11 @@ class User < ApplicationRecord
   def incoming_pending_friend_requests
     FriendRequest.where(other_user: self, status: FriendRequest::Status::PENDING)
   end
+
+  def self.from_omniauth(auth)
+    where(email: auth.info.email).first_or_create! do |user|
+      user.fullname = auth.info.name
+      user.email = auth.info.email
+    end
+  end
 end
