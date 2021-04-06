@@ -19,7 +19,7 @@ class AuthController < ApplicationController
   private
 
   def google_access_token
-    @access_token ||= request.env["omniauth.auth"]
+    @access_token ||= request.env['omniauth.auth']
   end
 
   def user

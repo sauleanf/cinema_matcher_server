@@ -16,9 +16,7 @@ class FriendRequest < ApplicationRecord
   validate :request_not_reflexive
 
   def request_not_reflexive
-    if user == other_user
-      errors.add(:other_user, "Cannot friend themself")
-    end
+    errors.add(:other_user, 'Cannot friend themself') if user == other_user
   end
 
   def accepted?

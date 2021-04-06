@@ -3,7 +3,7 @@
 class RoomsController < ApplicationController
   before_action :authorized?
   before_action :users, only: %i[add]
-  before_action :room, only: %i[show, add]
+  before_action :room, only: %i[show add]
 
   def index
     render json: current_user.rooms
