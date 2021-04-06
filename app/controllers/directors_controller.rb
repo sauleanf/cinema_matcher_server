@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 
 class DirectorsController < ApplicationController
+  before_action :directors, only: %i[index]
+  before_action :director, only: %i[show]
+
   def index
-    decorated_directors = DirectorDecorator.decorate_collection(directors)
     render json: {
-      directors: decorated_directors,
+      directors: DirectorDecorator.decorate_collection(@directors),
       page: page,
       count: directors.total_count
     }, status: :ok
   end
 
   def show
-    render json: director.decorate, status: :ok
+    render json: @director.decorate, status: :ok
   end
 
   private
@@ -21,7 +23,7 @@ class DirectorsController < ApplicationController
   end
 
   def director
-    @directors = Director.find(params[:id])
+    @director = Director.find(params[:id])
   end
 
   def page

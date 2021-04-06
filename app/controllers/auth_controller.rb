@@ -6,7 +6,7 @@ class AuthController < ApplicationController
       token = JsonWebToken.encode(user_id: user.id)
       render json: { user: user.decorate, token: token }
     else
-      render json: { msg: 'Credential are wrong' }, status: :unauthorized
+      render json: { message: ::Messages::WRONG_CREDENTIALS }, status: :unauthorized
     end
   end
 

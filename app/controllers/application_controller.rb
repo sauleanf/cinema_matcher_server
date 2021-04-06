@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 class ApplicationController < ActionController::Base
+  rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+
+  def record_not_found
+    render json: { message: Messages::RECORD_NOT_FOUND }, status: 404
+  end
+
   def encode_token(payload)
     JWT.encode(payload, secret)
   end
@@ -34,7 +40,7 @@ class ApplicationController < ActionController::Base
   end
 
   def authorized?
-    render json: { message: 'Authentication is required' }, status: :unauthorized unless current_user
+    render json: { message: Messages::AUTH_REQUIRED }, status: :unauthorized unless current_user
   end
 
   def secret

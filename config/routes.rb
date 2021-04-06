@@ -3,38 +3,40 @@
 Rails.application.routes.draw do
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   scope 'api/v1' do
-    resources :users
+    resources :users, only: [:index, :create]
+
+    scope 'users' do
+      put 'edit', to: 'users#edit'
+    end
+
     resources :directors
     resources :pictures
 
     scope 'auth' do
       post 'login', to: 'auth#login'
       scope 'google' do
-        post 'google_login', to: 'auth#google_login'
+        post 'login', to: 'auth#google_login'
       end
     end
 
     scope 'friends' do
       scope 'sent' do
-        get 'index', to: 'sent_friend_requests#index'
-        delete 'rescind', to: 'sent_friend_requests#rescind'
+        get '', to: 'sent_friend_requests#index'
+        post '', to: 'sent_friend_requests#create'
+        delete '', to: 'sent_friend_requests#rescind'
       end
 
       scope 'incoming' do
-        get 'index', to: 'incoming_friend_requests#index'
-        put 'accept', to: 'incoming_friend_requests#accept'
-        delete 'reject', to: 'incoming_friend_requests#reject'
+        get '', to: 'incoming_friend_requests#index'
+        put '', to: 'incoming_friend_requests#accept'
+        delete '', to: 'incoming_friend_requests#reject'
       end
     end
 
-    scope 'rooms' do
-      get 'index', to: 'rooms#index'
-      get 'show', to: 'rooms#show'
-      post 'create', to: 'rooms#create'
+    resources :rooms, only: [:index, :show, :create]
 
-      scope 'add' do
-        post 'add', to: 'rooms#add'
-      end
+    scope 'rooms' do
+      post 'add', to: 'rooms#add'
     end
   end
 

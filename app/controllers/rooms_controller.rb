@@ -2,23 +2,24 @@
 
 class RoomsController < ApplicationController
   before_action :authorized?
+  before_action :users, only: %i[add]
+  before_action :room, only: %i[show, add]
 
   def index
     render json: current_user.rooms
   end
 
   def show
-    render json: current_user.rooms.find(params[:id])
+    render json: room.decorate
   end
 
   def add
-    room = Room.find(params[:id])
-    room.users += new_users
+    @room.users += @users
 
-    if room.save
-      render json: room.decorate, status: :ok
+    if @room.save
+      render json: @room.decorate, status: :ok
     else
-      render json: room.errors, status: :unprocessable_entity
+      render json: @room.errors, status: :unprocessable_entity
     end
   end
 
@@ -35,8 +36,12 @@ class RoomsController < ApplicationController
 
   private
 
-  def new_users
-    User.where(id: room_params[:user_ids])
+  def room
+    @room = current_user.rooms.find(params[:id])
+  end
+
+  def users
+    @users = User.where(id: room_params[:user_ids])
   end
 
   def room_params

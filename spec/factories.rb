@@ -46,6 +46,6 @@ FactoryBot.define do
     sequence :username do |n|
       "john_doe_#{n}"
     end
-    hashed_password { 'hashed_pw' }
+    hashed_password { 'placeholder' }
   end
 end

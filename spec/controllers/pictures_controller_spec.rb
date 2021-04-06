@@ -20,12 +20,13 @@ describe PicturesController, type: :controller do
   describe 'GET index' do
     it 'returns pages' do
       page = 0
+
       num_pages.times.each do |i|
         page = i + 1
+
         get :index, params: { page: page }
 
         pictures = PictureDecorator.decorate_collection(pages_of_pictures[i])
-
         received_pictures = response_body.fetch(:pictures)
 
         expect(received_pictures.size).to eq(per_page)

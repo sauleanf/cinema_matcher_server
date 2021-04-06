@@ -20,12 +20,13 @@ describe DirectorsController, type: :controller do
   describe 'GET index' do
     it 'returns pages' do
       page = 0
+
       num_pages.times.each do |i|
         page = i + 1
+
         get :index, params: { page: page }
 
         directors = DirectorDecorator.decorate_collection(pages_of_directors[i])
-
         received_directors = response_body.fetch(:directors)
 
         expect(received_directors.size).to eq(per_page)

@@ -12,12 +12,11 @@ describe IncomingFriendRequestsController, type: :controller do
   let!(:redundant_friend_request) { FriendRequest.create(user: user, other_user: other_user) }
   let!(:unrelated_friend_request) { FriendRequest.create(user: other_user, other_user: third_user) }
 
-  let!(:token) { JsonWebToken.encode({ user_id: user.id }) }
-
   context 'when not authenticated' do
     describe 'GET index' do
       it 'returns an error' do
         get :index
+
         expect_auth_to_fail
       end
     end
@@ -25,6 +24,7 @@ describe IncomingFriendRequestsController, type: :controller do
     describe 'PUT accept' do
       it 'returns an error' do
         put :accept
+
         expect_auth_to_fail
       end
     end
@@ -32,6 +32,7 @@ describe IncomingFriendRequestsController, type: :controller do
     describe 'DELETE reject' do
       it 'returns an error' do
         delete :reject
+
         expect_auth_to_fail
       end
     end
@@ -39,7 +40,7 @@ describe IncomingFriendRequestsController, type: :controller do
 
   context 'when authenticated' do
     before do
-      request.headers['Authorization'] = "Bearer #{token}"
+      login_user user
     end
 
     describe 'GET index' do
@@ -56,6 +57,7 @@ describe IncomingFriendRequestsController, type: :controller do
     describe 'PUT accept' do
       before do
         put :accept, params: { id: first_incoming_friend_request.id }
+
         first_incoming_friend_request.reload
       end
 
@@ -65,8 +67,6 @@ describe IncomingFriendRequestsController, type: :controller do
 
         expect(friendship).to be_truthy
         expect(symmetric_friendship).to be_truthy
-
-        first_incoming_friend_request
       end
 
       it 'sets the friend request status' do
