@@ -6,11 +6,21 @@ class AuthController < ApplicationController
       token = JsonWebToken.encode(user_id: user.id)
       render json: { user: user.decorate, token: token }
     else
-      render json: { msg: 'Credential are wrong' }, status: :unauthorized
+      render json: { message: ::Messages::WRONG_CREDENTIALS }, status: :unauthorized
     end
   end
 
+  def google_login
+    @user = User.from_omniauth(google_access_token)
+    token = JsonWebToken.encode(user_id: user.id)
+    render json: { user: user.decorate, token: token }
+  end
+
   private
+
+  def google_access_token
+    @access_token ||= request.env['omniauth.auth']
+  end
 
   def user
     @user ||= User.find_by(email: login_params[:email])

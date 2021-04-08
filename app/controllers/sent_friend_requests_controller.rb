@@ -1,20 +1,17 @@
 # frozen_string_literal: true
 
 class SentFriendRequestsController < ApplicationController
-  before_action :authorized?, only: %i[index show create rescind]
+  before_action :authorized?, only: %i[index create rescind]
   before_action :friend_request, only: %i[show rescind]
   before_action :friend_requests, only: %i[index]
+  before_action :other_user, only: %i[create]
 
   def index
     render json: FriendRequestDecorator.decorate_collection(friend_requests), status: :ok
   end
 
-  def show
-    render json: friend_request.decorate, status: :ok
-  end
-
   def create
-    data = current_user.send_friend_request(friend_request_params[:other_user_id])
+    data = current_user.send_friend_request(@other_user)
 
     if data.key?(:error)
       render json: data.fetch(:error), status: :unprocessable_entity
@@ -30,6 +27,10 @@ class SentFriendRequestsController < ApplicationController
   end
 
   private
+
+  def other_user
+    @other_user = User.find(friend_request_params[:other_user_id])
+  end
 
   def friend_requests
     @friend_requests = current_user.sent_pending_friend_requests

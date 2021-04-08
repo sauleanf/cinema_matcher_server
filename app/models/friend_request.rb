@@ -13,6 +13,11 @@ class FriendRequest < ApplicationRecord
 
   validates :user, presence: true
   validates :other_user, presence: true
+  validate :request_not_reflexive
+
+  def request_not_reflexive
+    errors.add(:other_user, 'Cannot friend themself') if user == other_user
+  end
 
   def accepted?
     status == Status::ACCEPTED

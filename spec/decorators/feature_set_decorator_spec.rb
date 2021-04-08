@@ -8,11 +8,8 @@ RSpec.describe FeatureSetDecorator, type: :decorator do
   let(:decorated_feature_set) { feature_set.decorate }
 
   it 'delegates the right fields' do
-    FeatureSet::GENERES.each do |genre|
-      expect(decorated_feature_set.send(genre)).to be(feature_set.send(genre))
+    FeatureSet::FEATURES.each do |genre|
+      expect(decorated_feature_set.send(genre)).to be(feature_set.get_feature(genre))
     end
-
-    expect(decorated_feature_set.year).to eq(feature_set.year)
-    expect(decorated_feature_set.length).to eq(feature_set.length)
   end
 end

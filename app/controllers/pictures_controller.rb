@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 class PicturesController < ApplicationController
+  before_action :pictures, only: %i[index]
+  before_action :picture, only: %i[show]
+
   def index
-    decorated_pictures = PictureDecorator.decorate_collection(pictures)
     render json: {
-      pictures: decorated_pictures,
+      pictures: PictureDecorator.decorate_collection(pictures),
       page: page,
       count: pictures.total_count
     }, status: :ok

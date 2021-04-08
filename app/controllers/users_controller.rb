@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[show update destroy follow]
+  before_action :authorized?, only: %i[index edit destroy follow]
 
-  def show
+  def index
     render json: current_user.decorate, status: :ok
   end
 
@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     end
   end
 
-  def update
+  def edit
     current_user.assign_attributes(user_params)
 
     if current_user.save
@@ -34,11 +34,6 @@ class UsersController < ApplicationController
     else
       render json: current_user.errors, status: :unprocessable_entity
     end
-  end
-
-  def destroy
-    current_user.destroy
-    render json: current_user.decorate, status: :ok
   end
 
   private

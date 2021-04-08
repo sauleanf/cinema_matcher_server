@@ -7,7 +7,7 @@ RSpec.describe FriendRequest, type: :model do
   let(:other_user) { create(:user) }
   let!(:friend_request) { FriendRequest.create(user: user, other_user: other_user) }
 
-  context 'FriendRequest#pending?' do
+  describe 'FriendRequest#pending?' do
     context 'when the request is pending' do
       it 'returns true' do
         expect(friend_request.pending?).to be(true)
@@ -29,7 +29,7 @@ RSpec.describe FriendRequest, type: :model do
     end
   end
 
-  context 'FriendRequest#rejected?' do
+  describe 'FriendRequest#rejected?' do
     context 'when the request is rejected' do
       before do
         friend_request.update(status: FriendRequest::Status::REJECTED)
@@ -55,7 +55,7 @@ RSpec.describe FriendRequest, type: :model do
     end
   end
 
-  context 'FriendRequest#accepted?' do
+  describe 'FriendRequest#accepted?' do
     context 'when the request is accepted' do
       before do
         friend_request.update(status: FriendRequest::Status::ACCEPTED)
@@ -81,7 +81,7 @@ RSpec.describe FriendRequest, type: :model do
     end
   end
 
-  context 'FriendRequest#rescinded?' do
+  describe 'FriendRequest#rescinded?' do
     context 'when the request is rescinded' do
       before do
         friend_request.update(status: FriendRequest::Status::RESCINDED)
@@ -104,6 +104,14 @@ RSpec.describe FriendRequest, type: :model do
           expect(friend_request.rescinded?).to be(false)
         end
       end
+    end
+  end
+
+  describe 'validate' do
+    it 'does not allow reflexive friend requests' do
+      invalid_friend_request = FriendRequest.new(user: user, other_user: user)
+
+      expect(invalid_friend_request.valid?).to be(false)
     end
   end
 end

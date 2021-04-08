@@ -21,13 +21,19 @@ class FeatureSet < ApplicationRecord
     thriller
   ].freeze
 
+  FEATURES = FeatureSet::GENERES + %i[
+    year
+    length
+    rating
+  ]
+
   belongs_to :parent, polymorphic: true
 
-  def set_genre(genre, val = true)
-    send("#{genre}=", val)
+  def set_feature(feature, val = true)
+    send("#{feature}=", val)
   end
 
-  def get_genre(genre)
-    send(genre)
+  def get_feature(feature)
+    send(feature)
   end
 end

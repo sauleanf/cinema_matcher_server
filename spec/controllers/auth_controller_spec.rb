@@ -4,22 +4,14 @@ require 'rails_helper'
 
 describe AuthController, type: :controller do
   let(:password) { 'password2' }
-  let(:user) do
-    user = create(:user)
-    user.password = password
-    user.save!
-
-    user
-  end
+  let(:user) { create(:user, password: password) }
 
   describe 'POST login' do
     it 'returns the user and token' do
       post :login, params: { credentials: { email: user.email, password: password } }
 
-      body = JSON.parse(response.body)
-
-      expect(body.key?('token')).to be_truthy
-      expect(body['user'].to_json).to eq(user.decorate.to_json)
+      expect(response_body.key?(:token)).to be_truthy
+      expect(response_body[:user]).to eq(user.decorate.as_json)
     end
 
     context 'when authentication fails' do
@@ -27,7 +19,7 @@ describe AuthController, type: :controller do
         post :login, params: { credentials: { email: user.email, password: 'wrong' } }
 
         expect(response.status).to eq(401)
-        expect(JSON.parse(response.body)).to eq('msg' => 'Credential are wrong')
+        expect_message(Messages::WRONG_CREDENTIALS)
       end
     end
   end

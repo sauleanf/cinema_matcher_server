@@ -6,4 +6,9 @@ class Friendship < ApplicationRecord
 
   validates :first_user, presence: true
   validates :second_user, presence: true
+  validate :friendship_not_reflexive
+
+  def friendship_not_reflexive
+    errors.add(:other_user, 'Cannot friend themself') if first_user == second_user
+  end
 end
