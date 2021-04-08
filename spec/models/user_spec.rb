@@ -84,14 +84,10 @@ RSpec.describe User, type: :model do
   end
 
   context 'User#rooms' do
-    let(:room) do
-      room = Room.new
-      room.users << user
-      room.save!
+    let(:room) { Room.create(users: [user]) }
 
+    before do
       user.reload
-
-      room
     end
 
     it 'shows the users rooms' do
