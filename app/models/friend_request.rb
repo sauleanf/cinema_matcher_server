@@ -9,7 +9,7 @@ class FriendRequest < ApplicationRecord
   end
 
   belongs_to :user, dependent: :destroy
-  belongs_to :other_user, class_name: 'User', foreign_key: :other_user_id, dependent: :destroy
+  belongs_to :other_user, class_name: 'User', dependent: :destroy
 
   validates :user, presence: true
   validates :other_user, presence: true
@@ -33,20 +33,5 @@ class FriendRequest < ApplicationRecord
 
   def rescinded?
     status == Status::RESCINDED
-  end
-
-  def accept_request
-    status = Status::ACCEPTED
-    save!
-  end
-
-  def reject_request
-    status = Status::REJECTED
-    save!
-  end
-
-  def rescind_request
-    status = Status::RESCINDED
-    save!
   end
 end

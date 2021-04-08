@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Friendship < ApplicationRecord
-  belongs_to :first_user, class_name: 'User', foreign_key: :first_user_id, dependent: :destroy
-  belongs_to :second_user, class_name: 'User', foreign_key: :second_user_id, dependent: :destroy
+  belongs_to :first_user, class_name: 'User', dependent: :destroy
+  belongs_to :second_user, class_name: 'User', dependent: :destroy
 
   validates :first_user, presence: true
   validates :second_user, presence: true

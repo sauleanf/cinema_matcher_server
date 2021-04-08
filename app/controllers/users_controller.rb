@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[index edit destroy follow]
+  before_action :authorized?, only: %i[index edit follow]
 
   def index
     render json: current_user.decorate, status: :ok

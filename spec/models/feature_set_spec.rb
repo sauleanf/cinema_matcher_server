@@ -21,7 +21,7 @@ RSpec.describe FeatureSet, type: :model do
         feature_set.set_feature(genre, false)
         expect(feature_set.get_feature(genre)).to be(false)
 
-        feature_set.set_feature(genre)
+        feature_set.set_feature(genre, true)
         expect(feature_set.get_feature(genre)).to be(true)
       end
 

@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
 
   def record_not_found
-    render json: { message: Messages::RECORD_NOT_FOUND }, status: 404
+    render json: { message: Messages::RECORD_NOT_FOUND }, status: :not_found
   end
 
   def encode_token(payload)
@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
 
     begin
       JWT.decode(token, secret, false)
-    rescue JWT::DecodeError => e
+    rescue JWT::DecodeError
       nil
     end
   end

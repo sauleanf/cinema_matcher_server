@@ -1,0 +1,14 @@
+require: rubocop-rails
+
+# TODO: Set enabled to true
+Metrics/AbcSize:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 25
+
+Style/Documentation:
+  Enabled: false
