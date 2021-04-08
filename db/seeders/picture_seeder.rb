@@ -3,7 +3,7 @@
 require 'csv'
 
 class PictureSeeder
-  def self.seed(destroy_all = true)
+  def self.seed(destroy_all: true)
     if destroy_all
       Picture.destroy_all
       puts 'Destroy all previous pictures'

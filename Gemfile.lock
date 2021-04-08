@@ -166,6 +166,8 @@ GEM
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
+    rack-cors (1.1.1)
+      rack (>= 2.0.0)
     rack-mini-profiler (2.3.1)
       rack (>= 1.2.0)
     rack-protection (2.1.0)
@@ -285,14 +287,15 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
-  draper
+  draper (~> 4.0)
   factory_bot_rails
   jbuilder (~> 2.7)
-  jwt
-  kaminari
+  jwt (~> 2.2)
+  kaminari (~> 1.2)
   listen (~> 3.3)
-  omniauth-google-oauth2
+  omniauth-google-oauth2 (~> 1.0)
   puma (~> 5.0)
+  rack-cors (~> 1.1)
   rack-mini-profiler (~> 2.0)
   rails (~> 6.1.3, >= 6.1.3.1)
   rspec-rails (~> 5.0.0)
