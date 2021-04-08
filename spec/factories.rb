@@ -20,6 +20,7 @@ FactoryBot.define do
     superhero { false }
     thriller { false }
 
+    rating { 6.8 }
     year { 2017 }
     length { 221 }
   end

@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_210_404_230_441) do
+ActiveRecord::Schema.define(version: 20_210_408_044_414) do
   create_table 'director_sets', force: :cascade do |t|
     t.integer 'director_id'
     t.integer 'picture_id'
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 20_210_404_230_441) do
     t.integer 'length'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
+    t.decimal 'rating'
     t.index %w[parent_type parent_id], name: 'index_feature_sets_on_parent'
   end
 
@@ -76,7 +77,6 @@ ActiveRecord::Schema.define(version: 20_210_404_230_441) do
     t.datetime 'released_at'
     t.datetime 'created_at', precision: 6, null: false
     t.datetime 'updated_at', precision: 6, null: false
-    t.string 'tconst'
   end
 
   create_table 'room_users', force: :cascade do |t|
