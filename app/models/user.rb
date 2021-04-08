@@ -10,13 +10,13 @@ class User < ApplicationRecord
   validates :username, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
 
-  has_many :room_users
+  has_many :room_users, dependent: :destroy
   has_many :rooms, through: :room_users
 
-  has_many :friendships, foreign_key: :first_user_id
+  has_many :friendships, foreign_key: :first_user_id, inverse_of: :second_user, dependent: :destroy
   has_many :friends, class_name: 'User', through: :friendships, source: :second_user
 
-  has_many :friend_requests
+  has_many :friend_requests, dependent: :destroy
   has_many :pending_friends, class_name: 'User', through: :friend_requests
 
   def password

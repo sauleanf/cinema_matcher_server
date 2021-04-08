@@ -1,13 +1,11 @@
 # frozen_string_literal: true
 
 class Picture < ApplicationRecord
-  has_many :director_sets
+  has_many :director_sets, dependent: :destroy
   has_many :directors, through: :director_sets
-  has_one :feature_set, as: :parent
+  has_one :feature_set, as: :parent, dependent: :destroy
 
-  def set_feature(feature, datum)
-    features.set_feature(feature, datum)
-  end
+  delegate :set_feature, to: :features
 
   def features
     if feature_set

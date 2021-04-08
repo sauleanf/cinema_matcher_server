@@ -2,7 +2,7 @@
 
 class SentFriendRequestsController < ApplicationController
   before_action :authorized?, only: %i[index create rescind]
-  before_action :friend_request, only: %i[show rescind]
+  before_action :friend_request, only: %i[rescind]
   before_action :friend_requests, only: %i[index]
   before_action :other_user, only: %i[create]
 

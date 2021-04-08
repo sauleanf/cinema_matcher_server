@@ -29,7 +29,7 @@ class FeatureSet < ApplicationRecord
 
   belongs_to :parent, polymorphic: true
 
-  def set_feature(feature, val = true)
+  def set_feature(feature, val)
     send("#{feature}=", val)
   end
 
