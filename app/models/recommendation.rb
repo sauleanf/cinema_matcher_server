@@ -4,5 +4,6 @@ class Recommendation < ApplicationRecord
   belongs_to :room
   belongs_to :picture
 
-  has_many :interested_users
+  has_many :interested_users, dependent: :destroy
+  has_many :users, through: :interested_users
 end
