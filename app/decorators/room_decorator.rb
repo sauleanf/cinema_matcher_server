@@ -5,6 +5,6 @@ class RoomDecorator < Draper::Decorator
   decorates_associations :users, with: UserDecorator
 
   def as_json(options = nil)
-    super.merge(users: users.as_json)
+    HashWithIndifferentAccess.new(super.merge(users: users.as_json))
   end
 end

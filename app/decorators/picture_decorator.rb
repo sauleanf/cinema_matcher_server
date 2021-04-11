@@ -5,6 +5,6 @@ class PictureDecorator < Draper::Decorator
   decorates_associations :directors, with: DirectorDecorator
 
   def as_json(options = nil)
-    super.merge(directors: directors.as_json)
+    HashWithIndifferentAccess.new(super.merge(directors: directors.as_json))
   end
 end

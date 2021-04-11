@@ -5,6 +5,6 @@ class RecommendationDecorator < Draper::Decorator
   decorates_association :picture, with: PictureDecorator
 
   def as_json(options = nil)
-    super.merge(picture: picture.as_json)
+    HashWithIndifferentAccess.new(super.merge(picture: picture.as_json))
   end
 end

@@ -53,10 +53,10 @@ describe RecommendationsController, type: :controller do
     end
 
     describe 'GET index' do
-      it 'returns the incoming pending friend requests belonging to the user' do
+      it 'returns recommendations for the room' do
         get :index, params: { room_id: room.id }
 
-        expect(response_body).to include(recommendations)
+        expect(response_body).to eq(RecommendationDecorator.decorate_collection(recommendations).as_json)
       end
     end
   end
