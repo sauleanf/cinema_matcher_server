@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-describe UserDecorator, type: :decorator do
+describe FriendshipDecorator, type: :decorator do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
   let(:friendship) { Friendship.create(first_user: user, second_user: second_user) }
@@ -15,5 +15,22 @@ describe UserDecorator, type: :decorator do
   it 'decorates the associations' do
     expect(decorated_friendship.first_user).to be_decorated
     expect(decorated_friendship.second_user).to be_decorated
+  end
+
+  describe 'FriendshipDecorator#as_json' do
+    let!(:friendship_json) { HashWithIndifferentAccess.new(decorated_friendship.as_json) }
+    let!(:expected_friendship_hash) do
+      HashWithIndifferentAccess.new(
+        id: decorated_friendship.id,
+        first_user: user.decorate.as_json,
+        second_user: second_user.decorate.as_json,
+        created_at: decorated_friendship.created_at.as_json,
+        updated_at: decorated_friendship.updated_at.as_json
+      )
+    end
+
+    it 'converts to json properly' do
+      expect(friendship_json).to eq(expected_friendship_hash)
+    end
   end
 end

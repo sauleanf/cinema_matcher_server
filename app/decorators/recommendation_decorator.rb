@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
 class RecommendationDecorator < Draper::Decorator
+  delegate :id, :picture, :created_at, :updated_at
   decorates_association :picture, with: PictureDecorator
-  decorates_association :user, with: UserDecorator
+
+  def as_json(options = nil)
+    super.merge(picture: picture.as_json)
+  end
 end

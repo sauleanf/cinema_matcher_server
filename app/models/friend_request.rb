@@ -8,8 +8,8 @@ class FriendRequest < ApplicationRecord
     RESCINDED = 'rescinded'
   end
 
-  belongs_to :user, dependent: :destroy
-  belongs_to :other_user, class_name: 'User', dependent: :destroy
+  belongs_to :user
+  belongs_to :other_user, class_name: 'User'
 
   validates :user, presence: true
   validates :other_user, presence: true

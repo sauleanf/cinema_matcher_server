@@ -2,6 +2,7 @@
 
 class RecommendationsController < ApplicationController
   before_action :authorized?, only: %i[index show create update]
+  before_action :room, only: %i[index show]
   before_action :recommendations, only: %i[index]
   before_action :recommendation, only: %i[show]
 
