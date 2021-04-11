@@ -3,8 +3,8 @@
 class CreateRecommendations < ActiveRecord::Migration[6.1]
   def change
     create_table :recommendations do |t|
-      t.belongs_to :picture
-      t.belongs_to :room
+      t.integer :picture_id
+      t.integer :room_id
 
       t.timestamps
     end

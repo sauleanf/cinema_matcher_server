@@ -92,8 +92,6 @@ ActiveRecord::Schema.define(version: 2021_04_10_214943) do
     t.integer "room_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["picture_id"], name: "index_recommendations_on_picture_id"
-    t.index ["room_id"], name: "index_recommendations_on_room_id"
   end
 
   create_table "room_users", force: :cascade do |t|
