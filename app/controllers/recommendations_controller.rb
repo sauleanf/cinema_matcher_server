@@ -5,7 +5,7 @@ class RecommendationsController < ApplicationController
   before_action :room, only: %i[index show create update]
   before_action :recommendations, only: %i[index]
   before_action :recommendation, only: %i[show update]
-  before_action :interested_user, once: %i[update]
+  before_action :interested_user, only: %i[update]
 
   def index
     render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
