@@ -12,6 +12,7 @@ describe RecommendationsController, type: :controller do
     5.times.map { create(:picture) }
   end
   let!(:recommendations) { room.create_recommendations }
+  let!(:recommendation) { recommendations.first }
 
   context 'when not authenticated' do
     describe 'GET index' do
@@ -57,6 +58,38 @@ describe RecommendationsController, type: :controller do
         get :index, params: { room_id: room.id }
 
         expect(response_body).to eq(RecommendationDecorator.decorate_collection(recommendations).as_json)
+      end
+    end
+
+    describe 'GET show' do
+      it 'returns recommendations for the room' do
+        get :show, params: { room_id: room.id, id: recommendation.id }
+
+        expect(response_body).to eq(recommendation.decorate.as_json)
+      end
+    end
+
+    describe 'POST create' do
+      let(:new_recommendations) { room.create_recommendations }
+      it 'returns the new recommendations for the room' do
+        expect_any_instance_of(Room).to receive(:create_recommendations).and_return(new_recommendations)
+
+        post :create, params: { room_id: room.id }
+
+        decorated_recommendations = RecommendationDecorator.decorate_collection(new_recommendations)
+
+        expect(response_body.pluck(:id)).to eq(decorated_recommendations.as_json.pluck(:id))
+      end
+    end
+
+    describe 'PUT update' do
+      let(:new_recommendations) { room.create_recommendations }
+      it 'add interested users to the recommendation' do
+        put :update, params: { id: recommendation.id, room_id: room.id, interested_user_id: user.id }
+
+        recommendation.reload
+
+        expect(recommendation.users).to eq([user])
       end
     end
   end

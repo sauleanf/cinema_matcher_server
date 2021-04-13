@@ -2,9 +2,10 @@
 
 class RecommendationsController < ApplicationController
   before_action :authorized?, only: %i[index show create update]
-  before_action :room, only: %i[index show]
+  before_action :room, only: %i[index show create update]
   before_action :recommendations, only: %i[index]
-  before_action :recommendation, only: %i[show]
+  before_action :recommendation, only: %i[show update]
+  before_action :interested_user, once: %i[update]
 
   def index
     render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
@@ -16,12 +17,11 @@ class RecommendationsController < ApplicationController
 
   def create
     @recommendations = @room.create_recommendations
-
     render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
   end
 
   def update
-    @recommendation.users << interested_user
+    @recommendation.users << @interested_user
     @recommendation.save!
 
     render json: @recommendation.decorate, status: :ok
@@ -34,7 +34,7 @@ class RecommendationsController < ApplicationController
   end
 
   def recommendation
-    @recommendation = @room.recommendations.where(id: params.fetch(:recommendation_id))
+    @recommendation = @room.recommendations.find(params.fetch(:id))
   end
 
   def room
@@ -43,7 +43,7 @@ class RecommendationsController < ApplicationController
   end
 
   def interested_user
-    params.fetch(:interested_user_id)
+    @interested_user = User.find(params.fetch(:interested_user_id))
   end
 
   def room_id
