@@ -5,14 +5,11 @@ require 'rails_helper'
 RSpec.describe Room, type: :model do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
-  let(:room) do
-    room = Room.new
-    room.users = [user, second_user]
-    room.save!
+  let(:room) { Room.create(users: [user, second_user]) }
 
+  before do
     user.reload
-
-    room
+    second_user.reload
   end
 
   context 'Room#users' do

@@ -8,9 +8,7 @@ describe RecommendationsController, type: :controller do
   let!(:third_user) { create(:user) }
 
   let!(:room) { Room.create(users: [user, other_user]) }
-  let!(:pictures) do
-    5.times.map { create(:picture) }
-  end
+  let!(:pictures) { 5.times.map { create(:picture) } }
   let!(:recommendations) { room.create_recommendations }
   let!(:recommendation) { recommendations.first }
 

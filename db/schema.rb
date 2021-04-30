@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_04_10_214943) do
+ActiveRecord::Schema.define(version: 2021_04_30_150847) do
 
   create_table "director_sets", force: :cascade do |t|
     t.integer "director_id"
@@ -85,6 +85,16 @@ ActiveRecord::Schema.define(version: 2021_04_10_214943) do
     t.datetime "released_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "recommendation_statuses", force: :cascade do |t|
+    t.integer "recommendation_id"
+    t.integer "user_id"
+    t.boolean "confirmed"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["recommendation_id"], name: "index_recommendation_statuses_on_recommendation_id"
+    t.index ["user_id"], name: "index_recommendation_statuses_on_user_id"
   end
 
   create_table "recommendations", force: :cascade do |t|

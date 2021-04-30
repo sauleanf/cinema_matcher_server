@@ -28,6 +28,8 @@ class RoomsController < ApplicationController
     room.users << current_user
 
     if room.save
+      CreateRecommendationsJob.perform_later(room)
+
       render json: room.decorate, status: :ok
     else
       render json: room.errors, status: :unprocessable_entity
