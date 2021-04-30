@@ -3,6 +3,18 @@ version: "3"
 services:
   rails_web:
     build: .
+    depends_on:
+      - redis
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "3000:3000"
+  redis:
+    image: 'redis:5-alpine'
+    command: redis-server
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
+
+volumes:
+  redis:

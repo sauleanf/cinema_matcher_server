@@ -32,4 +32,23 @@ describe UserDecorator, type: :decorator do
   it 'decorates the associations' do
     expect(decorated_user.friends).to be_decorated
   end
+
+  describe 'userDecorator#as_json' do
+    let!(:user_json) { HashWithIndifferentAccess.new(decorated_user.as_json) }
+    let!(:expected_user_hash) do
+      HashWithIndifferentAccess.new(
+        id: decorated_user.id,
+        email: decorated_user.email,
+        fullname: decorated_user.fullname,
+        profile_image: decorated_user.profile_image,
+        username: decorated_user.username,
+        created_at: user.created_at.as_json,
+        updated_at: user.updated_at.as_json
+      )
+    end
+
+    it 'converts to json properly' do
+      expect(user_json).to eq(expected_user_hash)
+    end
+  end
 end

@@ -19,6 +19,8 @@ class User < ApplicationRecord
   has_many :friend_requests, dependent: :destroy
   has_many :pending_friends, class_name: 'User', through: :friend_requests
 
+  has_many :recommendation_statuses, dependent: :destroy
+
   def password
     @password ||= Password.new(hashed_password)
   end

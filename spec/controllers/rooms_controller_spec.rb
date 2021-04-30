@@ -89,6 +89,12 @@ describe RoomsController, type: :controller do
 
         expect(room.users).to include(user)
       end
+
+      it 'enqueues a CreateRecommendationsJob' do
+        expect(CreateRecommendationsJob).to receive(:perform_later).once
+
+        post :create
+      end
     end
 
     describe 'POST add' do
