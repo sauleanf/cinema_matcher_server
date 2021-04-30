@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class InterestedUser < ApplicationRecord
+class RecommendationUser < ApplicationRecord
   belongs_to :recommendation
   belongs_to :user
 end

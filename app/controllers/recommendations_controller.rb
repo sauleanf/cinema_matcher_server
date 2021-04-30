@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 
 class RecommendationsController < ApplicationController
-  before_action :authorized?, only: %i[index show create update]
-  before_action :room, only: %i[index show create update]
+  before_action :authorized?, only: %i[index show create]
+  before_action :room, only: %i[index show create]
   before_action :recommendations, only: %i[index]
-  before_action :recommendation, only: %i[show update]
-  before_action :interested_user, only: %i[update]
+  before_action :recommendation, only: %i[show]
 
   def index
     render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
@@ -18,13 +17,6 @@ class RecommendationsController < ApplicationController
   def create
     @recommendations = @room.create_recommendations
     render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
-  end
-
-  def update
-    @recommendation.users << @interested_user
-    @recommendation.save!
-
-    render json: @recommendation.decorate, status: :ok
   end
 
   private
@@ -40,10 +32,6 @@ class RecommendationsController < ApplicationController
   def room
     @room = RoomUser.find_by(room_id: room_id,
                              user_id: current_user.id).room
-  end
-
-  def interested_user
-    @interested_user = User.find(params.fetch(:interested_user_id))
   end
 
   def room_id

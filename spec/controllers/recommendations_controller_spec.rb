@@ -36,14 +36,6 @@ describe RecommendationsController, type: :controller do
         expect_auth_to_fail
       end
     end
-
-    describe 'PUT update' do
-      it 'returns an error' do
-        put :update, params: { id: 1 }
-
-        expect_auth_to_fail
-      end
-    end
   end
 
   context 'when authenticated' do
@@ -77,17 +69,6 @@ describe RecommendationsController, type: :controller do
         decorated_recommendations = RecommendationDecorator.decorate_collection(new_recommendations)
 
         expect(response_body.pluck(:id)).to eq(decorated_recommendations.as_json.pluck(:id))
-      end
-    end
-
-    describe 'PUT update' do
-      let(:new_recommendations) { room.create_recommendations }
-      it 'add interested users to the recommendation' do
-        put :update, params: { id: recommendation.id, room_id: room.id, interested_user_id: user.id }
-
-        recommendation.reload
-
-        expect(recommendation.users).to eq([user])
       end
     end
   end
