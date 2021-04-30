@@ -53,8 +53,6 @@ GEM
     activerecord (6.1.3.1)
       activemodel (= 6.1.3.1)
       activesupport (= 6.1.3.1)
-    activerecord-precount (0.7.0)
-      activerecord (>= 4.2)
     activestorage (6.1.3.1)
       actionpack (= 6.1.3.1)
       activejob (= 6.1.3.1)
@@ -312,7 +310,6 @@ PLATFORMS
 
 DEPENDENCIES
   action-cable-testing
-  activerecord-precount
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   byebug
