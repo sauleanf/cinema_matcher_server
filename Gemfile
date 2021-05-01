@@ -3,7 +3,7 @@
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby '2.7.0'
+ruby '2.7.2'
 gem 'action-cable-testing'
 gem 'bcrypt', '~> 3.1.7'
 gem 'draper', '~>4.0'
