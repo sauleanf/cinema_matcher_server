@@ -10,7 +10,7 @@ class RoomsController < ApplicationController
   end
 
   def show
-    render json: room.decorate
+    render json: @room.decorate
   end
 
   def add
@@ -24,15 +24,14 @@ class RoomsController < ApplicationController
   end
 
   def create
-    room = Room.new
-    room.users << current_user
+    @room = Room.new(users: [current_user])
 
-    if room.save
-      CreateRecommendationsJob.perform_later(room)
+    if @room.save
+      CreateRecommendationsJob.perform_later(@room)
 
-      render json: room.decorate, status: :ok
+      render json: @room.decorate, status: :ok
     else
-      render json: room.errors, status: :unprocessable_entity
+      render json: @room.errors, status: :unprocessable_entity
     end
   end
 

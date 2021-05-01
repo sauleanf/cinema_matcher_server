@@ -10,7 +10,7 @@ class IncomingFriendRequestsController < ApplicationController
   end
 
   def show
-    render json: friend_request.decorate, status: :ok
+    render json: @friend_request.decorate, status: :ok
   end
 
   def accept

@@ -13,7 +13,7 @@ class PicturesController < ApplicationController
   end
 
   def show
-    render json: picture.decorate, status: :ok
+    render json: @picture.decorate, status: :ok
   end
 
   private

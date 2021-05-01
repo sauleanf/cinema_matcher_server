@@ -25,14 +25,24 @@ describe UsersController, type: :controller do
         }
       end
 
-      it 'creates an user' do
+      it 'creates an user and registration' do
         expect do
           post :create, params: { user: user_params }
         end.to change { User.count }.by(1)
 
         new_user = User.last
+        registration = new_user.registration
 
         expect(new_user).to have_attributes(user_params.except!(:password))
+        expect(registration.confirmed?).to eq(false)
+      end
+
+      it 'sends an email' do
+        ActiveJob::Base.queue_adapter = :test
+
+        expect do
+          post :create, params: { user: user_params }
+        end.to have_enqueued_job(ActionMailer::MailDeliveryJob)
       end
 
       it 'returns the user in the response' do

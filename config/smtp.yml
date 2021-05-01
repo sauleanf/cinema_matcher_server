@@ -1,0 +1,11 @@
+development:
+  address: smtp.gmail.com
+  authentication: !ruby/symbol plain
+  domain: gmail.com
+  enable_starttls_auto: true
+  password: <%= Rails.application.credentials.mailer_password %>
+  port: 587
+  user_name: testemail123128@gmail.com
+
+
+

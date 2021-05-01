@@ -23,6 +23,7 @@ gem 'turbolinks', '~> 5'
 gem 'webpacker', '~> 5.0'
 # gem 'image_processing', '~> 1.2'
 gem 'bootsnap', '>= 1.4.4', require: false
+gem 'premailer-rails'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
