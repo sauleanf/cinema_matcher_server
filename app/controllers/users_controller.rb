@@ -1,18 +1,10 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[index edit follow]
+  before_action :authorized?, only: %i[index edit]
 
   def index
     render json: current_user.decorate, status: :ok
-  end
-
-  def follow
-    followee_id = params[:followee_id]
-    followee = User.find(followee_id)
-    current_user.follow(followee_id)
-
-    render json: followee.decorate, status: :ok
   end
 
   def create
@@ -20,6 +12,10 @@ class UsersController < ApplicationController
     @user.password = create_user_params.fetch(:password)
 
     if @user.save
+      Registration.create(user: @user)
+
+      RegistrationMailer.with(user: @user).welcome_email.deliver_later
+
       render json: @user.decorate, status: :ok
     else
       render json: @user.errors, status: :unprocessable_entity

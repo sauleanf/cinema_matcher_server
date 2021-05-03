@@ -21,6 +21,8 @@ class User < ApplicationRecord
 
   has_many :recommendation_statuses, dependent: :destroy
 
+  has_one :registration, dependent: :destroy
+
   def password
     @password ||= Password.new(hashed_password)
   end

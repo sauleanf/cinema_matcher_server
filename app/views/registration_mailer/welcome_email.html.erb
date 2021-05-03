@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <title>Welcome to Cinema Matcher!</title>
+  </head>
+  <style type="text/css" media="screen">
+    body {
+        font-family: "Roboto Light", sans-serif;
+    }
+
+    p {
+        color: #555;
+        font-size: 1.2rem;
+    }
+
+    h1 {
+        color: #3291c4;
+        font-size: 1.6rem;
+    }
+
+    h2 {
+        color: #4d4d68;
+        font-size: 2rem;
+    }
+
+    hr {
+        background: #BBBBBB;
+        border: none;
+        height: 2px;
+        width: 100%;
+        display: block;
+    }
+
+    .code-bar {
+        background: transparent;
+        border: 2px solid #4d4d68;
+        padding: 1rem 2rem;
+        font-size: 1.4rem;
+        border-radius: 4px;
+        transition: all .2s ease-in;
+        color: #4d4d68;
+        text-decoration: none;
+        width: 18rem;
+        text-align: center;
+    }
+
+    .email-body {
+        background: #fbfbff;
+        padding: 2rem
+    }
+
+    .email-footer {
+        background: #cfd1de;
+        padding: 1rem;
+        color: #4d4d68;
+    }
+  </style>
+  <body>
+    <div class="email-body">
+      <h2> Welcome <%= @user.fullname %>! </h2>
+      <hr />
+      <p>
+        Cinema Matcher successfully has created an account for you!
+      </p>
+      <p>
+        Please verify your email before continuing. In order to do so, please use the following code
+      </p>
+      <br />
+      <div class="code-bar">
+        <%= @registration.code %>
+      </div>
+      <br />
+      <p>Thanks for joining the Cinema Matcher Community</p>
+    </div>
+    <div class="email-footer">
+      © Cinema Matcher 2021
+    </div>
+  </body>
+</html>

@@ -14,8 +14,7 @@ class ApplicationController < ActionController::Base
   def current_user
     return unless decoded_token
 
-    user_id = decoded_token[0]['user_id']
-    @current_user ||= User.find_by(id: user_id)
+    @current_user ||= User.find_by(id: decoded_token[0]['user_id'])
   end
 
   private
