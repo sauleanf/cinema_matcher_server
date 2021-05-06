@@ -11,19 +11,18 @@ RSpec.describe CreateRecommendationsJob, type: :job do
   let!(:decorated_recommendations) { RecommendationDecorator.decorate_collection(recommendations).as_json }
 
   before do
+    ActiveJob::Base.queue_adapter = :test
     allow_any_instance_of(Room).to receive(:create_recommendations).and_return(recommendations)
   end
 
   describe '#perform_later' do
     it 'enqueues a job' do
-      ActiveJob::Base.queue_adapter = :test
       expect do
         CreateRecommendationsJob.perform_later(room)
       end.to have_enqueued_job
     end
 
     it 'enqueues a job' do
-      ActiveJob::Base.queue_adapter = :test
       expect do
         CreateRecommendationsJob.perform_now(room)
       end.to have_broadcasted_to(room).from_channel(RoomChannel).with(recommendations: decorated_recommendations)
