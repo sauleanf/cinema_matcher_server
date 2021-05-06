@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 2021_05_02_000308) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "director_sets", force: :cascade do |t|
     t.integer "director_id"
     t.integer "picture_id"

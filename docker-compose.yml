@@ -1,20 +1,31 @@
 version: "3"
 
 services:
-  rails_web:
+  cinema_matcher_web:
     build: .
     depends_on:
-      - redis
+      - cinema_matcher_redis
+      - cinema_matcher_db
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "3000:3000"
-  redis:
+  cinema_matcher_redis:
     image: 'redis:5-alpine'
     command: redis-server
     ports:
       - '6379:6379'
     volumes:
       - 'redis:/data'
-
+  cinema_matcher_db:
+    image: postgres
+    restart: always
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
 volumes:
   redis:
+  cinema_matcher_db:

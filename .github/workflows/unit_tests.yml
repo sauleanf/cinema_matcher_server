@@ -7,19 +7,41 @@ on:
     branches: [ master ]
 
 jobs:
-  ubuntu-build:
+  build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    env:
+      RAILS_ENV: test
+      POSTGRES_HOST: localhost
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: cinematcher_test
+      POSTGRES_PORT: 5432
     steps:
       - name: Checkout
         uses: actions/checkout@v2.0.0
       - name: Install Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.2
+          ruby-version: 2.6.7
           bundler-cache: true
+      - name: Install required apt packages
+        run: |
+          sudo apt-get -y install libpq-dev
       - name: Install Gems via Bundler
         run: |
           bundle install
-      - name: Run Rspec
+      - name: Run RSpec
         run: |
+          bundle exec rails db:create
+          bundle exec rails db:schema:load
           bundle exec rspec
