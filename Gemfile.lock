@@ -1163,6 +1163,10 @@ GEM
     css_parser (1.9.0)
       addressable
     diff-lcs (1.4.4)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     draper (4.0.1)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -1401,6 +1405,7 @@ DEPENDENCIES
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  dotenv-rails
   draper (~> 4.0)
   factory_bot_rails
   jbuilder (~> 2.7)

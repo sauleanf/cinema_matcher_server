@@ -8,6 +8,7 @@ gem 'action-cable-testing'
 gem 'aws-sdk'
 gem 'aws-sdk-sqs'
 gem 'bcrypt', '~> 3.1.7'
+gem 'dotenv-rails', groups: %i[development test]
 gem 'draper', '~>4.0'
 gem 'jbuilder', '~> 2.7'
 gem 'jwt', '~>2.2'

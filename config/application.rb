@@ -15,6 +15,10 @@ module CinemaMatcher
 
     config.active_job.queue_adapter = :shoryuken
 
+    Bundler.require(*Rails.groups)
+
+    Dotenv::Railtie.load
+
     # Configuration for the application, engines, and railties goes here.
     #
     # These settings can be overridden in specific environments using the files
