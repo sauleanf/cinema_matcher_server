@@ -1,0 +1,4 @@
+concurrency: 15
+queues:
+  - [create_recommendations, 1]
+  - [update_pictures_imdb, 1]

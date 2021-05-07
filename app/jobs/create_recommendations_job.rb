@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CreateRecommendationsJob < ApplicationJob
-  queue_as :default
+  queue_as 'create_recommendations'
 
   def perform(room)
     recommendations = room.create_recommendations

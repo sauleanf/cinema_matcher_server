@@ -1354,6 +1354,10 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    shoryuken (5.2.1)
+      aws-sdk-core (>= 2)
+      concurrent-ruby
+      thor
     spring (2.1.1)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -1392,6 +1396,7 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing
   aws-sdk
+  aws-sdk-sqs
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   byebug
@@ -1415,6 +1420,7 @@ DEPENDENCIES
   rubocop-rails
   sass-rails (>= 6)
   selenium-webdriver
+  shoryuken
   spring
   turbolinks (~> 5)
   tzinfo-data

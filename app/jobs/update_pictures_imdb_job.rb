@@ -4,7 +4,7 @@ require 'aws-sdk'
 require 'csv'
 
 class UpdatePicturesImdbJob < ApplicationJob
-  queue_as :default
+  queue_as 'update_pictures_imdb'
 
   def perform(*args)
     bucket = args.first
