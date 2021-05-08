@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[index edit]
+  before_action :authorized?, only: %i[index edit friends]
 
   def index
     render json: current_user.decorate, status: :ok
@@ -30,6 +30,10 @@ class UsersController < ApplicationController
     else
       render json: current_user.errors, status: :unprocessable_entity
     end
+  end
+
+  def friends
+    render json: UserDecorator.decorate_collection(current_user.friends), status: :ok
   end
 
   private

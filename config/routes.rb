@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
     scope 'users' do
       put 'edit', to: 'users#edit'
+      get 'friends', to: 'users#friends'
     end
 
     resources :directors
