@@ -6,7 +6,9 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.6.7'
 gem 'action-cable-testing'
 gem 'aws-sdk'
+gem 'aws-sdk-sqs'
 gem 'bcrypt', '~> 3.1.7'
+gem 'dotenv-rails', groups: %i[development test]
 gem 'draper', '~>4.0'
 gem 'jbuilder', '~> 2.7'
 gem 'jwt', '~>2.2'
@@ -20,6 +22,7 @@ gem 'redis', '~> 4.0'
 gem 'rubocop'
 gem 'rubocop-rails'
 gem 'sass-rails', '>= 6'
+gem 'shoryuken'
 gem 'turbolinks', '~> 5'
 # gem 'image_processing', '~> 1.2'
 gem 'bootsnap', '>= 1.4.4', require: false

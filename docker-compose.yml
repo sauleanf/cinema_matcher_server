@@ -1,31 +1,38 @@
 version: "3"
 
 services:
-  cinema_matcher_web:
+  web:
     build: .
     depends_on:
-      - cinema_matcher_redis
-      - cinema_matcher_db
+      - db
     command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
     ports:
       - "3000:3000"
-  cinema_matcher_redis:
-    image: 'redis:5-alpine'
-    command: redis-server
-    ports:
-      - '6379:6379'
     volumes:
-      - 'redis:/data'
-  cinema_matcher_db:
+      - .:/app
+      - bundle_path:/bundle
+    environment:
+      RAILS_ENV: development
+      BUNDLE_PATH: /bundle/vendor
+  db:
     image: postgres
     restart: always
     volumes:
-      - ./tmp/db:/var/lib/postgresql/data
+      - db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
       - "5432:5432"
+  worker:
+    build: .
+    command: bash -c "bundle exec shoryuken -R -C config/shoryuken.yml"
+    volumes:
+      - .:/app
+    environment:
+      AWS_REGION: ${AWS_REGION}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
 volumes:
-  redis:
-  cinema_matcher_db:
+  bundle_path:
+  db_data:

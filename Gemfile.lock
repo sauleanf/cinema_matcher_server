@@ -1163,6 +1163,10 @@ GEM
     css_parser (1.9.0)
       addressable
     diff-lcs (1.4.4)
+    dotenv (2.7.6)
+    dotenv-rails (2.7.6)
+      dotenv (= 2.7.6)
+      railties (>= 3.2)
     draper (4.0.1)
       actionpack (>= 5.0)
       activemodel (>= 5.0)
@@ -1354,6 +1358,10 @@ GEM
     selenium-webdriver (3.142.7)
       childprocess (>= 0.5, < 4.0)
       rubyzip (>= 1.2.2)
+    shoryuken (5.2.1)
+      aws-sdk-core (>= 2)
+      concurrent-ruby
+      thor
     spring (2.1.1)
     sprockets (4.0.2)
       concurrent-ruby (~> 1.0)
@@ -1392,10 +1400,12 @@ PLATFORMS
 DEPENDENCIES
   action-cable-testing
   aws-sdk
+  aws-sdk-sqs
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
+  dotenv-rails
   draper (~> 4.0)
   factory_bot_rails
   jbuilder (~> 2.7)
@@ -1415,6 +1425,7 @@ DEPENDENCIES
   rubocop-rails
   sass-rails (>= 6)
   selenium-webdriver
+  shoryuken
   spring
   turbolinks (~> 5)
   tzinfo-data
