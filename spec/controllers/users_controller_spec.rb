@@ -3,8 +3,17 @@
 require 'rails_helper'
 
 describe UsersController, type: :controller do
-  let(:user) { create(:user) }
-  let(:second_user) { create(:user) }
+  let!(:user) { create(:user) }
+  let!(:second_user) { create(:user) }
+  let!(:friendships) do
+    friendship = Friendship.create(first_user: user, second_user: second_user)
+    symmetric_friendship = Friendship.create(first_user: second_user, second_user: user)
+    [friendship, symmetric_friendship]
+  end
+
+  before do
+    ActiveJob::Base.queue_adapter = :test
+  end
 
   context 'when not authenticated' do
     describe 'GET index' do
@@ -38,8 +47,6 @@ describe UsersController, type: :controller do
       end
 
       it 'sends an email' do
-        ActiveJob::Base.queue_adapter = :test
-
         expect do
           post :create, params: { user: user_params }
         end.to have_enqueued_job(ActionMailer::MailDeliveryJob)
@@ -57,6 +64,14 @@ describe UsersController, type: :controller do
     describe 'PUT edit' do
       it 'returns an error' do
         put :edit
+
+        expect_auth_to_fail
+      end
+    end
+
+    describe 'GET friends' do
+      it 'returns an error' do
+        get :friends
 
         expect_auth_to_fail
       end
@@ -92,6 +107,14 @@ describe UsersController, type: :controller do
 
         expect(user).to have_attributes(edit_user_params.except!(:password))
         expect(response_body).to include(edit_user_params)
+      end
+    end
+
+    describe 'GET friends' do
+      it 'returns the second user' do
+        get :friends
+
+        expect(response_body).to eq([second_user.decorate.as_json])
       end
     end
   end

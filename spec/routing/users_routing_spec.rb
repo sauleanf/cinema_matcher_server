@@ -15,5 +15,9 @@ RSpec.describe UsersController, type: :routing do
     it 'routes to #edit' do
       expect(put: '/api/v1/users/edit').to route_to('users#edit')
     end
+
+    it 'routes to #friends' do
+      expect(get: '/api/v1/users/friends').to route_to('users#friends')
+    end
   end
 end
