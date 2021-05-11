@@ -5,7 +5,7 @@ require 'rails_helper'
 describe RoomDecorator, type: :decorator do
   let(:user) { create(:user) }
   let(:second_user) { create(:user) }
-  let(:room) { Room.create(users: [user, second_user]) }
+  let(:room) { Room.create(name: 'My Room', users: [user, second_user]) }
   let(:decorated_room) { room.decorate }
 
   it 'delegates the right fields' do
@@ -22,10 +22,11 @@ describe RoomDecorator, type: :decorator do
     let!(:room_json) { HashWithIndifferentAccess.new(decorated_room.as_json) }
     let!(:expected_room_hash) do
       HashWithIndifferentAccess.new(
-        id: decorated_room.id,
-        created_at: decorated_room.created_at.as_json,
-        updated_at: decorated_room.updated_at.as_json,
-        users: decorated_room.users.as_json
+        id: room.id,
+        name: room.name,
+        created_at: room.created_at.as_json,
+        updated_at: room.updated_at.as_json,
+        users: UserDecorator.decorate_collection(room.users).as_json
       )
     end
 

@@ -25,9 +25,9 @@ describe FriendRequestDecorator, type: :decorator do
         id: friend_request.id,
         user: user.decorate.as_json,
         other_user: other_user.decorate.as_json,
-        status: decorated_friend_request.status,
-        created_at: decorated_friend_request.created_at.as_json,
-        updated_at: decorated_friend_request.updated_at.as_json
+        status: friend_request.status,
+        created_at: friend_request.created_at.as_json,
+        updated_at: friend_request.updated_at.as_json
       )
     end
 

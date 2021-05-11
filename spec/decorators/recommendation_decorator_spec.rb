@@ -26,10 +26,10 @@ RSpec.describe RecommendationDecorator, type: :decorator do
     let!(:recommendation_json) { HashWithIndifferentAccess.new(decorated_recommendation.as_json) }
     let!(:expected_recommendation_hash) do
       HashWithIndifferentAccess.new(
-        id: decorated_recommendation.id,
-        created_at: decorated_recommendation.created_at.as_json,
-        updated_at: decorated_recommendation.updated_at.as_json,
-        picture: decorated_recommendation.picture.as_json
+        id: recommendation.id,
+        created_at: recommendation.created_at.as_json,
+        updated_at: recommendation.updated_at.as_json,
+        picture: recommendation.picture.decorate.as_json
       )
     end
 

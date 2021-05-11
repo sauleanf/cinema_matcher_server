@@ -17,9 +17,9 @@ RSpec.describe FeatureSetDecorator, type: :decorator do
     let!(:feature_set_json) { HashWithIndifferentAccess.new(decorated_feature_set.as_json) }
     let!(:expected_feature_set_hash) do
       hash = HashWithIndifferentAccess.new(
-        id: decorated_feature_set.id,
-        created_at: decorated_feature_set.created_at.as_json,
-        updated_at: decorated_feature_set.updated_at.as_json
+        id: feature_set.id,
+        created_at: feature_set.created_at.as_json,
+        updated_at: feature_set.updated_at.as_json
       )
       FeatureSet::FEATURES.each do |feature|
         hash[feature] = feature_set.get_feature(feature).as_json

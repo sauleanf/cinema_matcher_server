@@ -14,10 +14,10 @@ RSpec.describe DirectorDecorator, type: :decorator do
     let!(:director_json) { HashWithIndifferentAccess.new(decorated_director.as_json) }
     let!(:expected_director_hash) do
       HashWithIndifferentAccess.new(
-        id: decorated_director.id,
-        fullname: decorated_director.fullname,
-        created_at: decorated_director.created_at.as_json,
-        updated_at: decorated_director.updated_at.as_json
+        id: director.id,
+        fullname: director.fullname,
+        created_at: director.created_at.as_json,
+        updated_at: director.updated_at.as_json
       )
     end
 

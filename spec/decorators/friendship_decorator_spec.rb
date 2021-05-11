@@ -21,11 +21,11 @@ describe FriendshipDecorator, type: :decorator do
     let!(:friendship_json) { HashWithIndifferentAccess.new(decorated_friendship.as_json) }
     let!(:expected_friendship_hash) do
       HashWithIndifferentAccess.new(
-        id: decorated_friendship.id,
+        id: friendship.id,
         first_user: user.decorate.as_json,
         second_user: second_user.decorate.as_json,
-        created_at: decorated_friendship.created_at.as_json,
-        updated_at: decorated_friendship.updated_at.as_json
+        created_at: friendship.created_at.as_json,
+        updated_at: friendship.updated_at.as_json
       )
     end
 
