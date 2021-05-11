@@ -37,11 +37,11 @@ describe UserDecorator, type: :decorator do
     let!(:user_json) { HashWithIndifferentAccess.new(decorated_user.as_json) }
     let!(:expected_user_hash) do
       HashWithIndifferentAccess.new(
-        id: decorated_user.id,
-        email: decorated_user.email,
-        fullname: decorated_user.fullname,
-        profile_image: decorated_user.profile_image,
-        username: decorated_user.username,
+        id: user.id,
+        email: user.email,
+        fullname: user.fullname,
+        profile_image: user.profile_image,
+        username: user.username,
         created_at: user.created_at.as_json,
         updated_at: user.updated_at.as_json
       )
