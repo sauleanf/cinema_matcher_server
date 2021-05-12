@@ -2,11 +2,11 @@
 
 class RoomsController < ApplicationController
   before_action :authorized?
-  before_action :users, only: %i[add]
+  before_action :users, only: %i[add create]
   before_action :room, only: %i[show add]
 
   def index
-    render json: current_user.rooms
+    render json: RoomDecorator.decorate_collection(current_user.rooms)
   end
 
   def show
@@ -24,7 +24,9 @@ class RoomsController < ApplicationController
   end
 
   def create
-    @room = Room.new(users: [current_user])
+    @room = Room.new(name: 'Temporary')
+    @room.users = users
+    @room.users << current_user
 
     if @room.save
       CreateRecommendationsJob.perform_later(@room)

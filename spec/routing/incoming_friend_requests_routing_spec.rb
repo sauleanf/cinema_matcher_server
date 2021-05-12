@@ -9,11 +9,11 @@ RSpec.describe IncomingFriendRequestsController, type: :routing do
     end
 
     it 'routes to #accept' do
-      expect(put: '/api/v1/friends/incoming').to route_to('incoming_friend_requests#accept')
+      expect(put: '/api/v1/friends/incoming/1').to route_to('incoming_friend_requests#accept', id: '1')
     end
 
     it 'routes to #reject' do
-      expect(delete: '/api/v1/friends/incoming').to route_to('incoming_friend_requests#reject')
+      expect(delete: '/api/v1/friends/incoming/1').to route_to('incoming_friend_requests#reject', id: '1')
     end
   end
 end

@@ -22,5 +22,14 @@ describe AuthController, type: :controller do
         expect_message(Messages::WRONG_CREDENTIALS)
       end
     end
+
+    context 'when the user does not exist' do
+      it 'returns a message and 401' do
+        post :login, params: { credentials: { email: 'wrong', password: 'wrong' } }
+
+        expect(response.status).to eq(401)
+        expect_message(Messages::USER_NOT_FOUND)
+      end
+    end
   end
 end

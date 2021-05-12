@@ -7,6 +7,10 @@ describe RoomsController, type: :controller do
   let(:second_user) { create(:user) }
   let(:third_user) { create(:user) }
 
+  before do
+    ActiveJob::Base.queue_adapter = :test
+  end
+
   context 'when not authenticated' do
     describe 'GET index' do
       it 'returns an error' do
@@ -54,7 +58,7 @@ describe RoomsController, type: :controller do
       it 'only shows the users room' do
         get :index
 
-        expect(response_body).to eq(rooms.as_json)
+        expect(response_body).to eq(RoomDecorator.decorate_collection(rooms).as_json)
       end
     end
 
@@ -80,20 +84,25 @@ describe RoomsController, type: :controller do
     end
 
     describe 'POST create' do
+      let!(:create_params) do
+        { room: { user_ids: [second_user.id] } }
+      end
+
       it 'creates a new room with the right data' do
         expect do
-          post :create
+          post :create, params: create_params
         end.to change(Room, :count).by(1)
 
         room = Room.last
 
         expect(room.users).to include(user)
+        expect(room.users).to include(second_user)
       end
 
       it 'enqueues a CreateRecommendationsJob' do
         expect(CreateRecommendationsJob).to receive(:perform_later).once
 
-        post :create
+        post :create, params: create_params
       end
     end
 

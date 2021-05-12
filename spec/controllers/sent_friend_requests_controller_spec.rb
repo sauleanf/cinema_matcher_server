@@ -32,7 +32,7 @@ describe SentFriendRequestsController, type: :controller do
 
     describe 'DELETE rescind' do
       it 'returns an error' do
-        delete :rescind
+        delete :rescind, params: { id: first_friend_request.id }
 
         expect_auth_to_fail
       end

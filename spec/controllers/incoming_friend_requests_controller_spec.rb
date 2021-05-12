@@ -23,7 +23,7 @@ describe IncomingFriendRequestsController, type: :controller do
 
     describe 'PUT accept' do
       it 'returns an error' do
-        put :accept
+        put :accept, params: { id: first_incoming_friend_request.id }
 
         expect_auth_to_fail
       end
@@ -31,7 +31,7 @@ describe IncomingFriendRequestsController, type: :controller do
 
     describe 'DELETE reject' do
       it 'returns an error' do
-        delete :reject
+        delete :reject, params: { id: first_incoming_friend_request.id }
 
         expect_auth_to_fail
       end

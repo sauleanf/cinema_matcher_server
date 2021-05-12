@@ -2,6 +2,8 @@
 
 class AuthController < ApplicationController
   def login
+    render json: { message: ::Messages::USER_NOT_FOUND }, status: :unauthorized and return unless user
+
     if user.password == login_params[:password]
       token = JsonWebToken.encode(user_id: user.id)
       render json: { user: user.decorate, token: token }
