@@ -24,7 +24,7 @@ class RoomsController < ApplicationController
   end
 
   def create
-    @room = Room.new(name: 'Temporary')
+    @room = Room.new(name: params[:name])
     @room.users = users
     @room.users << current_user
 
@@ -44,10 +44,10 @@ class RoomsController < ApplicationController
   end
 
   def users
-    @users = User.where(id: room_params[:user_ids])
+    @users = User.where(id: room_params[:users])
   end
 
   def room_params
-    params.require(:room).permit(:id, user_ids: [])
+    params.permit(:id, :name, users: [])
   end
 end

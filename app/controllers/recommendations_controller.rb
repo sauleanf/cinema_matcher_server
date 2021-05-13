@@ -35,6 +35,6 @@ class RecommendationsController < ApplicationController
   end
 
   def room_id
-    params.fetch(:room_id)
+    params.fetch(:room)
   end
 end

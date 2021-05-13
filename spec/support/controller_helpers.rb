@@ -18,11 +18,6 @@ module ControllerHelpers
     token = JsonWebToken.encode({ user_id: user.id })
     request.headers['Authorization'] = "Bearer #{token}"
   end
-
-  def expect_message(message)
-    expect(response_body.keys.length).to eq(1)
-    expect(response_body[:message]).to eq(message)
-  end
 end
 
 RSpec.configure do |c|

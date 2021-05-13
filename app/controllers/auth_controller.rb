@@ -2,13 +2,13 @@
 
 class AuthController < ApplicationController
   def login
-    render json: { message: ::Messages::USER_NOT_FOUND }, status: :unauthorized and return unless user
+    render json: { email: ::Messages::USER_NOT_FOUND }, status: :unauthorized and return unless user
 
     if user.password == login_params[:password]
       token = JsonWebToken.encode(user_id: user.id)
       render json: { user: user.decorate, token: token }
     else
-      render json: { message: ::Messages::WRONG_CREDENTIALS }, status: :unauthorized
+      render json: { password: ::Messages::WRONG_CREDENTIALS }, status: :unauthorized
     end
   end
 
@@ -29,6 +29,6 @@ class AuthController < ApplicationController
   end
 
   def login_params
-    params.require(:credentials).permit(:email, :password)
+    params.permit(:email, :password)
   end
 end

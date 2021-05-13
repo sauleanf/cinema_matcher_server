@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   scope 'api/v1' do
     resources :users, only: %i[index create]
     resources :recommendations, only: %i[index show create]
-    resources :registrations, only: %i[show]
+    resources :registrations, only: %i[index]
 
     scope 'registrations' do
       put '', to: 'registrations#update'

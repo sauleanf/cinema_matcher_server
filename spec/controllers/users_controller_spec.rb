@@ -36,7 +36,7 @@ describe UsersController, type: :controller do
 
       it 'creates an user and registration' do
         expect do
-          post :create, params: { user: user_params }
+          post :create, params: user_params
         end.to change { User.count }.by(1)
 
         new_user = User.last
@@ -48,16 +48,17 @@ describe UsersController, type: :controller do
 
       it 'sends an email' do
         expect do
-          post :create, params: { user: user_params }
+          post :create, params: user_params
         end.to have_enqueued_job(ActionMailer::MailDeliveryJob)
       end
 
-      it 'returns the user in the response' do
-        post :create, params: { user: user_params }
+      it 'returns the user and token in the response' do
+        post :create, params: user_params
 
         new_user = User.last
 
-        expect(response_body).to eq(new_user.decorate.as_json)
+        expect(response_body[:user]).to eq(new_user.decorate.as_json)
+        expect(response_body.key?(:token)).to be_truthy
       end
     end
 
@@ -101,7 +102,7 @@ describe UsersController, type: :controller do
       end
 
       it 'edits an user' do
-        put :edit, params: { user: edit_user_params }
+        put :edit, params: edit_user_params
 
         user.reload
 

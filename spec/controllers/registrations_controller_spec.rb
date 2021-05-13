@@ -11,9 +11,9 @@ describe RegistrationsController, type: :controller do
   end
 
   context 'when not authenticated' do
-    describe 'GET show' do
+    describe 'GET index' do
       it 'returns an error' do
-        get :show, params: { id: registration.id }
+        get :index
 
         expect_auth_to_fail
       end
@@ -33,9 +33,9 @@ describe RegistrationsController, type: :controller do
       login_user user
     end
 
-    describe 'GET show' do
+    describe 'GET index' do
       it 'shows the registration' do
-        get :show, params: { id: registration.id }
+        get :index
 
         expect(response_body).to eq(registration.decorate.as_json)
       end
@@ -54,9 +54,9 @@ describe RegistrationsController, type: :controller do
         end
 
         it 'returns a helpful message' do
-          put :update, params: { code: registration.code }
+          put :update, params: { id: registration.id, code: registration.code }
 
-          expect_message(Messages::REGISTRATION_COMPLETED)
+          expect(response_body).to eq(registration.decorate.as_json)
           expect(response).to have_http_status(200)
         end
 
@@ -80,8 +80,14 @@ describe RegistrationsController, type: :controller do
           expect(registration.confirmed?).to be(false)
         end
 
+        let!(:registration_failed_res) do
+          HashWithIndifferentAccess.new({
+                                          code: Messages::REGISTRATION_FAILED
+                                        })
+        end
+
         it 'returns a helpful message' do
-          expect_message(Messages::REGISTRATION_FAILED)
+          expect(response_body).to eq(registration_failed_res)
           expect(response).to have_http_status(422)
         end
       end

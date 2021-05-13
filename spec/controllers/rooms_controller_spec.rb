@@ -65,6 +65,9 @@ describe RoomsController, type: :controller do
     describe 'GET show' do
       let(:room) { rooms.first }
       let(:other_room) { other_rooms.first }
+      let(:error_res) do
+        HashWithIndifferentAccess.new({ message: Messages::RECORD_NOT_FOUND })
+      end
 
       context 'when the user is in the room' do
         it 'shows the room' do
@@ -78,14 +81,17 @@ describe RoomsController, type: :controller do
         it 'does not show the room' do
           get :show, params: { id: other_room.id }
 
-          expect_message(Messages::RECORD_NOT_FOUND)
+          expect(response_body).to eq(error_res)
         end
       end
     end
 
     describe 'POST create' do
       let!(:create_params) do
-        { room: { user_ids: [second_user.id] } }
+        HashWithIndifferentAccess.new({
+                                        name: 'My Room',
+                                        users: [second_user.id]
+                                      })
       end
 
       it 'creates a new room with the right data' do
@@ -95,6 +101,7 @@ describe RoomsController, type: :controller do
 
         room = Room.last
 
+        expect(room.name).to eq(create_params[:name])
         expect(room.users).to include(user)
         expect(room.users).to include(second_user)
       end
@@ -111,7 +118,7 @@ describe RoomsController, type: :controller do
       let!(:third_user) { create(:user) }
 
       it 'adds the user to the room' do
-        post :add, params: { id: room.id, room: { user_ids: [second_user.id, third_user.id] } }
+        post :add, params: { id: room.id, users: [second_user.id, third_user.id] }
 
         room.reload
 
@@ -121,7 +128,7 @@ describe RoomsController, type: :controller do
       end
 
       it 'returns room' do
-        post :add, params: { id: room.id, room: { user_ids: [second_user.id] } }
+        post :add, params: { id: room.id, user_ids: [second_user.id] }
         room.reload
 
         expect(response_body).to eq(room.decorate.as_json)

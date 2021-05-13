@@ -29,7 +29,7 @@ class SentFriendRequestsController < ApplicationController
   private
 
   def other_user
-    @other_user = User.find(friend_request_params[:other_user_id])
+    @other_user = User.find(friend_request_params[:other_user])
   end
 
   def friend_requests
@@ -41,6 +41,6 @@ class SentFriendRequestsController < ApplicationController
   end
 
   def friend_request_params
-    params.require(:request).permit(:other_user_id)
+    params.permit(:other_user)
   end
 end

@@ -57,7 +57,7 @@ describe SentFriendRequestsController, type: :controller do
 
     describe 'POST create' do
       it 'creates a friend request' do
-        post :create, params: { request: { other_user_id: fourth_user.id } }
+        post :create, params: { other_user: fourth_user.id }
 
         friend_request = FriendRequest.find_by(user: user, other_user: fourth_user)
 

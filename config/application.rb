@@ -14,6 +14,7 @@ module CinemaMatcher
     config.load_defaults 6.1
 
     config.active_job.queue_adapter = :shoryuken
+    config.action_mailer.deliver_later_queue_name = 'mailer'
 
     Bundler.require(*Rails.groups)
 

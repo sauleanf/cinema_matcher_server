@@ -13,10 +13,11 @@ class UsersController < ApplicationController
 
     if @user.save
       Registration.create(user: @user)
+      token = JsonWebToken.encode(user_id: @user.id)
 
       RegistrationMailer.with(user: @user).welcome_email.deliver_later
 
-      render json: @user.decorate, status: :ok
+      render json: { user: @user.decorate, token: token }
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -39,10 +40,10 @@ class UsersController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:username, :email, :fullname)
+    params.permit(:username, :email, :fullname)
   end
 
   def create_user_params
-    params.require(:user).permit(:username, :email, :fullname, :password)
+    params.permit(:username, :email, :fullname, :password)
   end
 end
