@@ -24,7 +24,6 @@ class User < ApplicationRecord
   has_one :registration, dependent: :destroy
 
   validates :email, uniqueness: true
-  validates :username, uniqueness: true
 
   def password
     @password ||= Password.new(hashed_password)
