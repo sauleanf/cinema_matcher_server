@@ -1,17 +1,21 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[index edit friends]
+  before_action :authorized?, only: %i[index show edit]
+  before_action :users, only: [:index]
+  include PaginationHelper
 
   def index
-    render json: current_user.decorate, status: :ok
-  end
-
-  def all
     render json: {
-      users: UserDecorator.decorate_collection(User.all),
+      users: UserDecorator.decorate_collection(@users),
       page: page,
       count: users.total_count
+    }, status: :ok
+  end
+
+  def show
+    render json: {
+      user: current_user.decorate
     }, status: :ok
   end
 
@@ -35,28 +39,32 @@ class UsersController < ApplicationController
     current_user.assign_attributes(user_params)
 
     if current_user.save
-      render json: current_user.decorate, status: :ok
+      render json: {
+        user: current_user.decorate
+      }, status: :ok
     else
-      render json: current_user.errors, status: :unprocessable_entity
+      render json: {
+        user: current_user.errors
+      }, status: :unprocessable_entity
     end
-  end
-
-  def friends
-    render json: UserDecorator.decorate_collection(current_user.friends), status: :ok
   end
 
   private
 
   def users
-    @users = User.page(page)
+    @users = paginate_record(User)
   end
 
   def page
-    params[:page] || 1
+    @page ||= Integer(params[:page] || 1)
   end
 
   def user_params
     params.permit(:username, :email, :fullname)
+  end
+
+  def filter_params
+    @filter_params ||= [:fullname]
   end
 
   def create_user_params

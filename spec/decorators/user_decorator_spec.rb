@@ -29,12 +29,8 @@ describe UserDecorator, type: :decorator do
     expect(decorated_user).not_to respond_to(:password)
   end
 
-  it 'decorates the associations' do
-    expect(decorated_user.friends).to be_decorated
-  end
-
   describe 'userDecorator#as_json' do
-    let!(:user_json) { HashWithIndifferentAccess.new(decorated_user.as_json) }
+    let!(:user_json) { HashWithIndifferentAccess.new(decorated_user.as_json(decorated_associations: true)) }
     let!(:expected_user_hash) do
       HashWithIndifferentAccess.new(
         id: user.id,

@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   scope 'api/v1' do
     resources :users, only: %i[index create]
     scope 'users' do
-      get '/all', to: 'users#all'
+      get 'self', to: 'users#show'
+      put 'edit', to: 'users#edit'
+      get 'friends', to: 'users#friends'
     end
 
     resources :recommendations, only: %i[index show create]
@@ -13,11 +15,6 @@ Rails.application.routes.draw do
 
     scope 'registrations' do
       put '', to: 'registrations#update'
-    end
-
-    scope 'users' do
-      put 'edit', to: 'users#edit'
-      get 'friends', to: 'users#friends'
     end
 
     resources :directors
@@ -31,6 +28,8 @@ Rails.application.routes.draw do
     end
 
     scope 'friends' do
+      get '', to: 'friends#index'
+
       scope 'sent' do
         get '', to: 'sent_friend_requests#index'
         post '', to: 'sent_friend_requests#create'

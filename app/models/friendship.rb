@@ -9,6 +9,6 @@ class Friendship < ApplicationRecord
   validate :friendship_not_reflexive
 
   def friendship_not_reflexive
-    errors.add(:other_user, 'Cannot friend themself') if first_user == second_user
+    errors.add(:second_user, 'Cannot friend themself') if first_user == second_user
   end
 end

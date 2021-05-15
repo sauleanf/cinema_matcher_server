@@ -44,13 +44,14 @@ describe RoomsController, type: :controller do
 
     let(:num_rooms) { 5 }
     let!(:rooms) do
-      num_rooms.times.map do
-        Room.create(users: [user, second_user])
+      num_rooms.times.map do |i|
+        Room.create(name: "Room #{i + 1}", users: [user, second_user])
       end
     end
+
     let!(:other_rooms) do
-      num_rooms.times.map do
-        Room.create(users: [second_user, third_user])
+      num_rooms.times.map do |i|
+        Room.create(name: "Other Room #{i + 1}", users: [second_user, third_user])
       end
     end
 

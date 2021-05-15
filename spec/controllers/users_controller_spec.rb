@@ -24,6 +24,14 @@ describe UsersController, type: :controller do
       end
     end
 
+    describe 'GET show' do
+      it 'returns an error' do
+        get :show
+
+        expect_auth_to_fail
+      end
+    end
+
     describe 'POST create' do
       let(:user_params) do
         {
@@ -69,14 +77,6 @@ describe UsersController, type: :controller do
         expect_auth_to_fail
       end
     end
-
-    describe 'GET friends' do
-      it 'returns an error' do
-        get :friends
-
-        expect_auth_to_fail
-      end
-    end
   end
 
   context 'when authenticated' do
@@ -84,11 +84,11 @@ describe UsersController, type: :controller do
       login_user user
     end
 
-    describe 'GET index' do
+    describe 'GET show' do
       it 'returns the user with the right id' do
-        get :index
+        get :show
 
-        expect(response_body).to eq(user.decorate.as_json)
+        expect(response_body[:user]).to eq(user.decorate.as_json)
       end
     end
 
@@ -107,15 +107,7 @@ describe UsersController, type: :controller do
         user.reload
 
         expect(user).to have_attributes(edit_user_params.except!(:password))
-        expect(response_body).to include(edit_user_params)
-      end
-    end
-
-    describe 'GET friends' do
-      it 'returns the second user' do
-        get :friends
-
-        expect(response_body).to eq([second_user.decorate.as_json])
+        expect(response_body[:user]).to include(edit_user_params)
       end
     end
   end

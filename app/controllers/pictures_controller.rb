@@ -4,6 +4,8 @@ class PicturesController < ApplicationController
   before_action :pictures, only: %i[index]
   before_action :picture, only: %i[show]
 
+  include PaginationHelper
+
   def index
     render json: {
       pictures: PictureDecorator.decorate_collection(@pictures),
@@ -21,11 +23,7 @@ class PicturesController < ApplicationController
   private
 
   def pictures
-    @pictures = if filter_params.values.size
-                  Picture.where(filter_params).page(page)
-                else
-                  Picture.page(page)
-                end
+    @pictures = paginate_record(Picture)
   end
 
   def picture
@@ -33,10 +31,6 @@ class PicturesController < ApplicationController
   end
 
   def filter_params
-    params.permit(:name)
-  end
-
-  def page
-    Integer(params[:page]) || 1
+    @filter_params ||= [:name]
   end
 end

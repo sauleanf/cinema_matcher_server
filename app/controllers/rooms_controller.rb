@@ -6,6 +6,8 @@ class RoomsController < ApplicationController
   before_action :room, only: %i[show add]
   before_action :rooms, only: %i[index]
 
+  include PaginationHelper
+
   def index
     render json: {
       rooms: RoomDecorator.decorate_collection(@rooms),
@@ -51,7 +53,7 @@ class RoomsController < ApplicationController
   private
 
   def filter_params
-    params.permit(:name)
+    @filter_params ||= [:name]
   end
 
   def room
@@ -59,11 +61,7 @@ class RoomsController < ApplicationController
   end
 
   def rooms
-    @rooms = if filter_params.values.size
-               current_user.rooms.where(filter_params).page(page)
-             else
-               current_user.rooms.page(page)
-             end
+    @rooms = paginate_record(current_user.rooms)
   end
 
   def users
@@ -72,9 +70,5 @@ class RoomsController < ApplicationController
 
   def room_params
     params.permit(:id, :name, users: [])
-  end
-
-  def page
-    params[:page] || 1
   end
 end

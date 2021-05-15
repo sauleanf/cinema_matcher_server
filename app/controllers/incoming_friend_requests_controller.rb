@@ -5,6 +5,8 @@ class IncomingFriendRequestsController < ApplicationController
   before_action :incoming_friend_requests, only: %i[index]
   before_action :incoming_friend_request, only: %i[show accept reject]
 
+  include PaginationHelper
+
   def index
     render json: {
       incoming_friend_requests: FriendRequestDecorator.decorate_collection(incoming_friend_requests)
@@ -42,7 +44,11 @@ class IncomingFriendRequestsController < ApplicationController
     @incoming_friend_request = current_user.incoming_pending_friend_requests.find(params[:id])
   end
 
+  def filter_params
+    @filter_params ||= %i[fullname username]
+  end
+
   def incoming_friend_requests
-    @incoming_friend_requests = current_user.incoming_pending_friend_requests
+    @incoming_friend_requests = paginate_record(current_user.incoming_pending_friend_requests)
   end
 end
