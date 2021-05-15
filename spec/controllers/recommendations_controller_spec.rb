@@ -47,7 +47,9 @@ describe RecommendationsController, type: :controller do
       it 'returns recommendations for the room' do
         get :index, params: { room: room.id }
 
-        expect(response_body).to eq(RecommendationDecorator.decorate_collection(recommendations).as_json)
+        expect(response_body[:recommendations]).to eq(RecommendationDecorator
+                                                        .decorate_collection(recommendations)
+                                                        .as_json)
       end
     end
 

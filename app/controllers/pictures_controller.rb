@@ -6,27 +6,37 @@ class PicturesController < ApplicationController
 
   def index
     render json: {
-      pictures: PictureDecorator.decorate_collection(pictures),
+      pictures: PictureDecorator.decorate_collection(@pictures),
       page: page,
-      count: pictures.total_count
+      count: @pictures.total_count
     }, status: :ok
   end
 
   def show
-    render json: @picture.decorate, status: :ok
+    render json: {
+      picture: @picture.decorate
+    }, status: :ok
   end
 
   private
 
   def pictures
-    @pictures = Picture.page(page)
+    @pictures = if filter_params.values.size
+                  Picture.where(filter_params).page(page)
+                else
+                  Picture.page(page)
+                end
   end
 
   def picture
     @picture = Picture.find(params[:id])
   end
 
+  def filter_params
+    params.permit(:name)
+  end
+
   def page
-    params.fetch(:page)
+    Integer(params[:page]) || 1
   end
 end

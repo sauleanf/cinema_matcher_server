@@ -7,7 +7,15 @@ class SentFriendRequestsController < ApplicationController
   before_action :other_user, only: %i[create]
 
   def index
-    render json: FriendRequestDecorator.decorate_collection(friend_requests), status: :ok
+    render json: {
+      sent_friend_requests: FriendRequestDecorator.decorate_collection(friend_requests)
+    }, status: :ok
+  end
+
+  def show
+    render json: {
+      sent_friend_request: @friend_request.decorate
+    }, status: :ok
   end
 
   def create
@@ -16,14 +24,18 @@ class SentFriendRequestsController < ApplicationController
     if data.key?(:error)
       render json: data.fetch(:error), status: :unprocessable_entity
     else
-      render json: data.fetch(:friend_request).decorate, status: :ok
+      render json: {
+        sent_friend_request: data.fetch(:friend_request).decorate
+      }, status: :ok
     end
   end
 
   def rescind
     @friend_request.status = FriendRequest::Status::RESCINDED
     @friend_request.save!
-    render json: friend_request.decorate, status: :ok
+    render json: {
+      sent_friend_request: friend_request.decorate
+    }, status: :ok
   end
 
   private

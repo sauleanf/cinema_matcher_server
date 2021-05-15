@@ -37,7 +37,7 @@ describe RegistrationsController, type: :controller do
       it 'shows the registration' do
         get :index
 
-        expect(response_body).to eq(registration.decorate.as_json)
+        expect(response_body[:registration]).to eq(registration.decorate.as_json)
       end
     end
 
@@ -53,11 +53,10 @@ describe RegistrationsController, type: :controller do
           expect(registration.confirmed?).to be(true)
         end
 
-        it 'returns a helpful message' do
+        it 'returns the registration' do
           put :update, params: { id: registration.id, code: registration.code }
 
-          expect(response_body).to eq(registration.decorate.as_json)
-          expect(response).to have_http_status(200)
+          expect(response_body[:registration]).to eq(registration.decorate.as_json)
         end
 
         it 'enqueues the mailer' do

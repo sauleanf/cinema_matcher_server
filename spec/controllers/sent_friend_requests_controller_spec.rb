@@ -45,13 +45,17 @@ describe SentFriendRequestsController, type: :controller do
     end
 
     describe 'GET index' do
+      let!(:serialized_friend_requests) do
+        [
+          HashWithIndifferentAccess.new(first_friend_request.decorate.as_json),
+          HashWithIndifferentAccess.new(second_friend_request.decorate.as_json)
+        ]
+      end
+
       it 'returns the friend requests belonging to the user' do
         get :index
 
-        expect(response_body).to include(first_friend_request.decorate.as_json)
-        expect(response_body).to include(second_friend_request.decorate.as_json)
-        expect(response_body).not_to include(redundant_friend_request.decorate.as_json)
-        expect(response_body).not_to include(unrelated_friend_request.decorate.as_json)
+        expect(response_body[:sent_friend_requests]).to eq(serialized_friend_requests)
       end
     end
 

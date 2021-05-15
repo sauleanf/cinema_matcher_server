@@ -4,6 +4,10 @@ Rails.application.routes.draw do
   root to: proc { [200, {}, ['']] }
   scope 'api/v1' do
     resources :users, only: %i[index create]
+    scope 'users' do
+      get '/all', to: 'users#all'
+    end
+
     resources :recommendations, only: %i[index show create]
     resources :registrations, only: %i[index]
 

@@ -13,13 +13,19 @@ class DirectorsController < ApplicationController
   end
 
   def show
-    render json: @director.decorate, status: :ok
+    render json: {
+      director: @director.decorate
+    }, status: :ok
   end
 
   private
 
   def directors
-    @directors = Director.page(page)
+    @directors = if filter_params.values.size
+                   Director.where(filter_params).page(page)
+                 else
+                   Director.page(page)
+                 end
   end
 
   def director
@@ -27,6 +33,10 @@ class DirectorsController < ApplicationController
   end
 
   def page
-    params.fetch(:page)
+    @page = Integer(params.fetch(:page))
+  end
+
+  def filter_params
+    params.permit(:fullname)
   end
 end

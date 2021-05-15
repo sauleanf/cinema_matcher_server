@@ -5,7 +5,9 @@ class RegistrationsController < ApplicationController
   before_action :registration, only: %i[update index]
 
   def index
-    render json: @registration.decorate
+    render json: {
+      registration: @registration.decorate
+    }, status: :ok
   end
 
   def update
@@ -14,7 +16,9 @@ class RegistrationsController < ApplicationController
 
       RegistrationMailer.with(user: @current_user).confirmed_email.deliver_later
 
-      render json: @registration.decorate, status: :ok
+      render json: {
+        registration: @registration.decorate
+      }, status: :ok
     else
       render json: { code: Messages::REGISTRATION_FAILED }, status: :unprocessable_entity
     end

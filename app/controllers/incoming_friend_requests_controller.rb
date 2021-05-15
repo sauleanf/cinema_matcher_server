@@ -6,11 +6,15 @@ class IncomingFriendRequestsController < ApplicationController
   before_action :incoming_friend_request, only: %i[show accept reject]
 
   def index
-    render json: FriendRequestDecorator.decorate_collection(incoming_friend_requests), status: :ok
+    render json: {
+      incoming_friend_requests: FriendRequestDecorator.decorate_collection(incoming_friend_requests)
+    }, status: :ok
   end
 
   def show
-    render json: @friend_request.decorate, status: :ok
+    render json: {
+      incoming_friend_request: @friend_request.decorate
+    }, status: :ok
   end
 
   def accept
@@ -19,13 +23,17 @@ class IncomingFriendRequestsController < ApplicationController
     if data.key?(:error)
       render json: data.fetch(:error), status: :unprocessable_entity
     else
-      render json: data.fetch(:friendship).decorate, status: :ok
+      render json: {
+        incoming_friend_request: data.fetch(:friendship).decorate
+      }, status: :ok
     end
   end
 
   def reject
     @incoming_friend_request.update(status: FriendRequest::Status::REJECTED)
-    render json: @incoming_friend_request.decorate, status: :ok
+    render json: {
+      incoming_friend_request: @incoming_friend_request.decorate
+    }, status: :ok
   end
 
   private

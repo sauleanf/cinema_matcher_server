@@ -7,6 +7,14 @@ class UsersController < ApplicationController
     render json: current_user.decorate, status: :ok
   end
 
+  def all
+    render json: {
+      users: UserDecorator.decorate_collection(User.all),
+      page: page,
+      count: users.total_count
+    }, status: :ok
+  end
+
   def create
     @user = User.new(create_user_params)
     @user.password = create_user_params.fetch(:password)
@@ -38,6 +46,14 @@ class UsersController < ApplicationController
   end
 
   private
+
+  def users
+    @users = User.page(page)
+  end
+
+  def page
+    params[:page] || 1
+  end
 
   def user_params
     params.permit(:username, :email, :fullname)

@@ -4,20 +4,29 @@ class RoomsController < ApplicationController
   before_action :authorized?
   before_action :users, only: %i[add create]
   before_action :room, only: %i[show add]
+  before_action :rooms, only: %i[index]
 
   def index
-    render json: RoomDecorator.decorate_collection(current_user.rooms)
+    render json: {
+      rooms: RoomDecorator.decorate_collection(@rooms),
+      count: current_user.rooms.count,
+      page: page
+    }, status: :ok
   end
 
   def show
-    render json: @room.decorate
+    render json: {
+      room: @room.decorate
+    }, status: :ok
   end
 
   def add
     @room.users += @users
 
     if @room.save
-      render json: @room.decorate, status: :ok
+      render json: {
+        room: @room.decorate
+      }, status: :ok
     else
       render json: @room.errors, status: :unprocessable_entity
     end
@@ -31,7 +40,9 @@ class RoomsController < ApplicationController
     if @room.save
       CreateRecommendationsJob.perform_later(@room)
 
-      render json: @room.decorate, status: :ok
+      render json: {
+        room: @room.decorate
+      }, status: :ok
     else
       render json: @room.errors, status: :unprocessable_entity
     end
@@ -39,8 +50,20 @@ class RoomsController < ApplicationController
 
   private
 
+  def filter_params
+    params.permit(:name)
+  end
+
   def room
     @room = current_user.rooms.find(params[:id])
+  end
+
+  def rooms
+    @rooms = if filter_params.values.size
+               current_user.rooms.where(filter_params).page(page)
+             else
+               current_user.rooms.page(page)
+             end
   end
 
   def users
@@ -49,5 +72,9 @@ class RoomsController < ApplicationController
 
   def room_params
     params.permit(:id, :name, users: [])
+  end
+
+  def page
+    params[:page] || 1
   end
 end

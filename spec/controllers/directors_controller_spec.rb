@@ -35,6 +35,26 @@ describe DirectorsController, type: :controller do
 
       expect(page).to eq(num_pages)
     end
+
+    context 'when a filter param is passed' do
+      let!(:name) { 'Eric Charles' }
+      let!(:filtered_director) do
+        Director.create(fullname: name)
+      end
+      let!(:expected_res) do
+        HashWithIndifferentAccess.new({
+                                        directors: DirectorDecorator.decorate_collection([filtered_director]).as_json,
+                                        count: 1,
+                                        page: 1
+                                      })
+      end
+
+      it 'returns the filtered pages' do
+        get :index, params: { page: 1, fullname: name }
+
+        expect(response_body).to eq(expected_res)
+      end
+    end
   end
 
   describe 'GET show' do
@@ -43,7 +63,7 @@ describe DirectorsController, type: :controller do
     it 'returns an error' do
       get :show, params: { id: director.id }
 
-      expect(response_body).to eq(director.decorate.as_json)
+      expect(response_body[:director]).to eq(director.decorate.as_json)
     end
   end
 end

@@ -7,7 +7,9 @@ class RecommendationsController < ApplicationController
   before_action :recommendation, only: %i[show]
 
   def index
-    render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
+    render json: {
+      recommendations: RecommendationDecorator.decorate_collection(@recommendations)
+    }, status: :ok
   end
 
   def show
