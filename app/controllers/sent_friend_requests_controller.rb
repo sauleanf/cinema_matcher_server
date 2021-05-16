@@ -6,9 +6,13 @@ class SentFriendRequestsController < ApplicationController
   before_action :friend_requests, only: %i[index]
   before_action :other_user, only: %i[create]
 
+  include PaginationHelper
+
   def index
     render json: {
-      sent_friend_requests: FriendRequestDecorator.decorate_collection(friend_requests)
+      sent_friend_requests: FriendRequestDecorator.decorate_collection(@friend_requests),
+      page: page,
+      count: @friend_requests.total_count
     }, status: :ok
   end
 
@@ -45,7 +49,7 @@ class SentFriendRequestsController < ApplicationController
   end
 
   def friend_requests
-    @friend_requests = current_user.sent_pending_friend_requests
+    @friend_requests = paginate_record(current_user.sent_pending_friend_requests)
   end
 
   def friend_request

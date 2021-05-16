@@ -54,7 +54,7 @@ describe IncomingFriendRequestsController, type: :controller do
       it 'returns the incoming pending friend requests belonging to the user' do
         get :index
 
-        expect(response_body[:incoming_friend_requests]).to eq(serialized_friend_requests)
+        expect(response_body[:items]).to eq(serialized_friend_requests)
       end
     end
 

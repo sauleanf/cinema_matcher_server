@@ -6,7 +6,7 @@ class AuthController < ApplicationController
 
     if user.password == login_params[:password]
       token = JsonWebToken.encode(user_id: user.id)
-      render json: { user: user.decorate, token: token }
+      render_record(user, token: token)
     else
       render json: { password: ::Messages::WRONG_CREDENTIALS }, status: :unauthorized
     end

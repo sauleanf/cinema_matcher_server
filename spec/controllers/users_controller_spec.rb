@@ -65,7 +65,7 @@ describe UsersController, type: :controller do
 
         new_user = User.last
 
-        expect(response_body[:user]).to eq(new_user.decorate.as_json)
+        expect(response_body[:item]).to eq(new_user.decorate.as_json)
         expect(response_body.key?(:token)).to be_truthy
       end
     end
@@ -84,11 +84,32 @@ describe UsersController, type: :controller do
       login_user user
     end
 
+    describe 'GET index' do
+      it 'returns all users' do
+        get :index
+
+        expect(response_body[:items]).to eq(UserDecorator.decorate_collection([user, second_user]).as_json)
+      end
+
+      create_user = proc do |params, suffix = 'suffix'|
+        user = User.new(email: "dummy_#{suffix}@gmail.com",
+                        username: 'dummy',
+                        fullname: 'Dummy Jones',
+                        **params)
+        user.password = 'password2'
+        user.save!
+
+        user
+      end
+
+      include_examples 'filtering', :user, create_user
+    end
+
     describe 'GET show' do
       it 'returns the user with the right id' do
         get :show
 
-        expect(response_body[:user]).to eq(user.decorate.as_json)
+        expect(response_body[:item]).to eq(user.decorate.as_json)
       end
     end
 
@@ -107,7 +128,7 @@ describe UsersController, type: :controller do
         user.reload
 
         expect(user).to have_attributes(edit_user_params.except!(:password))
-        expect(response_body[:user]).to include(edit_user_params)
+        expect(response_body[:item]).to include(edit_user_params)
       end
     end
   end

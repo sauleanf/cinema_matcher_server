@@ -47,7 +47,7 @@ describe RecommendationsController, type: :controller do
       it 'returns recommendations for the room' do
         get :index, params: { room: room.id }
 
-        expect(response_body[:recommendations]).to eq(RecommendationDecorator
+        expect(response_body[:items]).to eq(RecommendationDecorator
                                                         .decorate_collection(recommendations)
                                                         .as_json)
       end
@@ -57,20 +57,19 @@ describe RecommendationsController, type: :controller do
       it 'returns recommendations for the room' do
         get :show, params: { room: room.id, id: recommendation.id }
 
-        expect(response_body).to eq(recommendation.decorate.as_json)
+        expect(response_body[:item]).to eq(recommendation.decorate.as_json)
       end
     end
 
     describe 'POST create' do
       let(:new_recommendations) { room.create_recommendations }
+
       it 'returns the new recommendations for the room' do
         expect_any_instance_of(Room).to receive(:create_recommendations).and_return(new_recommendations)
 
         post :create, params: { room: room.id }
 
-        decorated_recommendations = RecommendationDecorator.decorate_collection(new_recommendations)
-
-        expect(response_body.pluck(:id)).to eq(decorated_recommendations.as_json.pluck(:id))
+        expect(response_body[:items].pluck(:id)).to eq(new_recommendations.pluck(:id))
       end
     end
   end

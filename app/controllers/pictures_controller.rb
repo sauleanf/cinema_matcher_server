@@ -6,31 +6,23 @@ class PicturesController < ApplicationController
 
   include PaginationHelper
 
+  FILTER_PARAMS = [:name].freeze
+
   def index
-    render json: {
-      pictures: PictureDecorator.decorate_collection(@pictures),
-      page: page,
-      count: @pictures.total_count
-    }, status: :ok
+    render_records(@pictures)
   end
 
   def show
-    render json: {
-      picture: @picture.decorate
-    }, status: :ok
+    render_record(@picture)
   end
 
   private
 
   def pictures
-    @pictures = paginate_record(Picture)
+    @pictures = paginate_record(Picture, FILTER_PARAMS)
   end
 
   def picture
     @picture = Picture.find(params[:id])
-  end
-
-  def filter_params
-    @filter_params ||= [:name]
   end
 end

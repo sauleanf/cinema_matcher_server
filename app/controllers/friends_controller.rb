@@ -6,19 +6,15 @@ class FriendsController < ApplicationController
 
   include PaginationHelper
 
+  FILTER_PARAMS = %i[fullname username].freeze
+
   def index
-    render json: {
-      friends: UserDecorator.decorate_collection(@friends)
-    }, status: :ok
+    render_records(@friends)
   end
 
   private
 
-  def filter_params
-    @filter_params ||= [:fullname]
-  end
-
   def friends
-    @friends = paginate_record(@current_user.friends)
+    @friends = paginate_record(@current_user.friends, FILTER_PARAMS)
   end
 end

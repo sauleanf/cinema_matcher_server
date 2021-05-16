@@ -27,7 +27,7 @@ describe PicturesController, type: :controller do
         get :index, params: { page: page }
 
         pictures = PictureDecorator.decorate_collection(pages_of_pictures[i])
-        received_pictures = response_body.fetch(:pictures)
+        received_pictures = response_body.fetch(:items)
 
         expect(received_pictures.size).to eq(per_page)
         expect(received_pictures).to eq(pictures.as_json)
@@ -36,27 +36,15 @@ describe PicturesController, type: :controller do
       expect(page).to eq(num_pages)
     end
 
-    context 'when a filter param is passed' do
-      let!(:name) { 'New Movie' }
-      let!(:filtered_picture) do
-        picture = create(:picture)
-        picture.update(name: name)
-        picture
-      end
-      let!(:expected_res) do
-        HashWithIndifferentAccess.new({
-                                        pictures: PictureDecorator.decorate_collection([filtered_picture]).as_json,
-                                        count: 1,
-                                        page: 1
-                                      })
-      end
+    create_picture = lambda { |params, suffix = 'suffix'|
+      picture = Picture.create(name: "My Movie #{suffix}",
+                               description: 'My Big Cool Movie',
+                               released_at: DateTime.now)
+      picture.update(**params)
+      picture
+    }
 
-      it 'returns the filtered pages' do
-        get :index, params: { page: 1, name: name }
-
-        expect(response_body).to eq(expected_res)
-      end
-    end
+    include_examples 'filtering', :picture, create_picture
   end
 
   describe 'GET show' do
@@ -65,7 +53,7 @@ describe PicturesController, type: :controller do
     it 'returns an error' do
       get :show, params: { id: picture.id }
 
-      expect(response_body[:picture]).to eq(picture.decorate.as_json)
+      expect(response_body[:item]).to eq(picture.decorate.as_json)
     end
   end
 end

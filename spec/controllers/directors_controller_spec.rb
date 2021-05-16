@@ -27,7 +27,7 @@ describe DirectorsController, type: :controller do
         get :index, params: { page: page }
 
         directors = DirectorDecorator.decorate_collection(pages_of_directors[i])
-        received_directors = response_body.fetch(:directors)
+        received_directors = response_body.fetch(:items)
 
         expect(received_directors.size).to eq(per_page)
         expect(received_directors).to eq(directors.as_json)
@@ -43,7 +43,7 @@ describe DirectorsController, type: :controller do
       end
       let!(:expected_res) do
         HashWithIndifferentAccess.new({
-                                        directors: DirectorDecorator.decorate_collection([filtered_director]).as_json,
+                                        items: [filtered_director.decorate.as_json],
                                         count: 1,
                                         page: 1
                                       })
@@ -60,10 +60,10 @@ describe DirectorsController, type: :controller do
   describe 'GET show' do
     let!(:director) { first_page_directors.first }
 
-    it 'returns an error' do
+    it 'returns the director' do
       get :show, params: { id: director.id }
 
-      expect(response_body[:director]).to eq(director.decorate.as_json)
+      expect(response_body[:item]).to eq(director.decorate.as_json)
     end
   end
 end

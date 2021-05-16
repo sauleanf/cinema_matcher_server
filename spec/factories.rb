@@ -49,4 +49,13 @@ FactoryBot.define do
     end
     hashed_password { 'placeholder' }
   end
+
+  factory :room do
+    name { 'My Cool Room' }
+    after(:create) do |room, _evaluator|
+      room.users = create_list(:user, 2)
+      room.save!
+      room.reload
+    end
+  end
 end

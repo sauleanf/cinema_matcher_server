@@ -8,15 +8,11 @@ class IncomingFriendRequestsController < ApplicationController
   include PaginationHelper
 
   def index
-    render json: {
-      incoming_friend_requests: FriendRequestDecorator.decorate_collection(incoming_friend_requests)
-    }, status: :ok
+    render_records(@incoming_friend_requests)
   end
 
   def show
-    render json: {
-      incoming_friend_request: @friend_request.decorate
-    }, status: :ok
+    render_record(@incoming_friend_request)
   end
 
   def accept
@@ -25,27 +21,19 @@ class IncomingFriendRequestsController < ApplicationController
     if data.key?(:error)
       render json: data.fetch(:error), status: :unprocessable_entity
     else
-      render json: {
-        incoming_friend_request: data.fetch(:friendship).decorate
-      }, status: :ok
+      render_record(data.fetch(:friendship))
     end
   end
 
   def reject
     @incoming_friend_request.update(status: FriendRequest::Status::REJECTED)
-    render json: {
-      incoming_friend_request: @incoming_friend_request.decorate
-    }, status: :ok
+    render_record(@incoming_friend_request)
   end
 
   private
 
   def incoming_friend_request
     @incoming_friend_request = current_user.incoming_pending_friend_requests.find(params[:id])
-  end
-
-  def filter_params
-    @filter_params ||= %i[fullname username]
   end
 
   def incoming_friend_requests

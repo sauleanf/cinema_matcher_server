@@ -34,7 +34,7 @@ describe FriendsController, type: :controller do
       it 'returns the user with the right id' do
         get :index
 
-        expect(response_body[:friends]).to eq([second_user.decorate.as_json])
+        expect(response_body[:items]).to eq([second_user.decorate.as_json])
       end
     end
   end

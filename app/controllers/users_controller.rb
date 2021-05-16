@@ -3,20 +3,17 @@
 class UsersController < ApplicationController
   before_action :authorized?, only: %i[index show edit]
   before_action :users, only: [:index]
+
   include PaginationHelper
 
+  FILTER_PARAMS = %i[fullname username].freeze
+
   def index
-    render json: {
-      users: UserDecorator.decorate_collection(@users),
-      page: page,
-      count: users.total_count
-    }, status: :ok
+    render_records(@users)
   end
 
   def show
-    render json: {
-      user: current_user.decorate
-    }, status: :ok
+    render_record(@current_user)
   end
 
   def create
@@ -29,7 +26,7 @@ class UsersController < ApplicationController
 
       RegistrationMailer.with(user: @user).welcome_email.deliver_later
 
-      render json: { user: @user.decorate, token: token }
+      render_record(@user, token: token)
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -39,9 +36,7 @@ class UsersController < ApplicationController
     current_user.assign_attributes(user_params)
 
     if current_user.save
-      render json: {
-        user: current_user.decorate
-      }, status: :ok
+      render_record(current_user)
     else
       render json: {
         user: current_user.errors
@@ -52,7 +47,7 @@ class UsersController < ApplicationController
   private
 
   def users
-    @users = paginate_record(User)
+    @users = paginate_record(User, FILTER_PARAMS)
   end
 
   def page
@@ -61,10 +56,6 @@ class UsersController < ApplicationController
 
   def user_params
     params.permit(:username, :email, :fullname)
-  end
-
-  def filter_params
-    @filter_params ||= [:fullname]
   end
 
   def create_user_params

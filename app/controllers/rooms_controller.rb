@@ -8,43 +8,35 @@ class RoomsController < ApplicationController
 
   include PaginationHelper
 
+  FILTER_PARAMS = [:name].freeze
+
   def index
-    render json: {
-      rooms: RoomDecorator.decorate_collection(@rooms),
-      count: current_user.rooms.count,
-      page: page
-    }, status: :ok
+    render_records(@rooms)
   end
 
   def show
-    render json: {
-      room: @room.decorate
-    }, status: :ok
+    render_record(@room)
   end
 
   def add
     @room.users += @users
 
     if @room.save
-      render json: {
-        room: @room.decorate
-      }, status: :ok
+      render_record(@room)
     else
       render json: @room.errors, status: :unprocessable_entity
     end
   end
 
   def create
-    @room = Room.new(name: params[:name])
+    @room = Room.new(name: new_room_name)
     @room.users = users
     @room.users << current_user
 
     if @room.save
       CreateRecommendationsJob.perform_later(@room)
 
-      render json: {
-        room: @room.decorate
-      }, status: :ok
+      render_record(@room)
     else
       render json: @room.errors, status: :unprocessable_entity
     end
@@ -52,8 +44,8 @@ class RoomsController < ApplicationController
 
   private
 
-  def filter_params
-    @filter_params ||= [:name]
+  def new_room_name
+    params[:name] || 'My Room'
   end
 
   def room
@@ -61,7 +53,7 @@ class RoomsController < ApplicationController
   end
 
   def rooms
-    @rooms = paginate_record(current_user.rooms)
+    @rooms = paginate_record(current_user.rooms, FILTER_PARAMS)
   end
 
   def users

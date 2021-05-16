@@ -11,7 +11,7 @@ describe AuthController, type: :controller do
       post :login, params: { email: user.email, password: password }
 
       expect(response_body.key?(:token)).to be_truthy
-      expect(response_body[:user]).to eq(user.decorate.as_json)
+      expect(response_body[:item]).to eq(user.decorate.as_json)
     end
 
     context 'when authentication fails' do

@@ -6,31 +6,23 @@ class DirectorsController < ApplicationController
 
   include PaginationHelper
 
+  FILTER_PARAMS = [:fullname].freeze
+
   def index
-    render json: {
-      directors: DirectorDecorator.decorate_collection(@directors),
-      page: page,
-      count: directors.total_count
-    }, status: :ok
+    render_records(@directors)
   end
 
   def show
-    render json: {
-      director: @director.decorate
-    }, status: :ok
+    render_record(@director)
   end
 
   private
 
   def directors
-    @directors = paginate_record(Director)
+    @directors = paginate_record(Director, FILTER_PARAMS)
   end
 
   def director
     @director = Director.find(params[:id])
-  end
-
-  def filter_params
-    @filter_params ||= [:fullname]
   end
 end

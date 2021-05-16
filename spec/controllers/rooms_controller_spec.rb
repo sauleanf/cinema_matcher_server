@@ -61,17 +61,16 @@ describe RoomsController, type: :controller do
       it 'only shows the users room' do
         get :index
 
-        expect(response_body[:rooms]).to eq(RoomDecorator.decorate_collection(rooms).as_json)
+        expect(response_body[:items]).to eq(RoomDecorator.decorate_collection(rooms).as_json)
       end
 
-      context 'and a filter param is passed' do
-        let!(:new_room) { Room.create(name: name, users: [user]) }
-        it 'shows the room' do
-          get :index, params: { name: name }
+      create_room = lambda { |params, suffix = 'suffix'|
+        Room.create(name: "dummy_#{suffix}@gmail.com",
+                    users: [User.first, User.last],
+                    **params)
+      }
 
-          expect(response_body[:rooms]).to eq([HashWithIndifferentAccess.new(new_room.decorate.as_json)])
-        end
-      end
+      include_examples 'filtering', :room, create_room
     end
 
     describe 'GET show' do
@@ -85,7 +84,7 @@ describe RoomsController, type: :controller do
         it 'shows the room' do
           get :show, params: { id: room.id }
 
-          expect(response_body[:room]).to eq(room.decorate.as_json)
+          expect(response_body[:item]).to eq(room.decorate.as_json)
         end
       end
 
@@ -143,7 +142,7 @@ describe RoomsController, type: :controller do
         post :add, params: { id: room.id, users: [second_user.id] }
         room.reload
 
-        expect(response_body[:room]).to eq(room.decorate.as_json)
+        expect(response_body[:item]).to eq(room.decorate.as_json)
       end
     end
   end

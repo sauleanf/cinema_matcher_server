@@ -10,9 +10,15 @@ class Room < ApplicationRecord
   has_many :recommendation_statuses, through: :recommendations
 
   def create_recommendations
-    Picture.first(4).map do |picture|
-      Recommendation.create(room: self, picture: picture)
+    recommendation_params = Picture.first(4).map do |picture|
+      {
+        room_id: id,
+        picture_id: picture.id
+      }
     end
+    Recommendation.create(recommendation_params)
+
+    recommendations
   end
 
   # Checks to see if all recommendations have been considered
