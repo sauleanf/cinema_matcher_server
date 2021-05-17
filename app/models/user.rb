@@ -32,7 +32,7 @@ class User < ApplicationRecord
   def send_friend_request(other_user)
     friend_request = FriendRequest.new(user: self, other_user: other_user)
 
-    return { error: friend_requests.errors } unless friend_request.save
+    return { error: friend_request.errors } unless friend_request.save
 
     { friend_request: friend_request }
   end

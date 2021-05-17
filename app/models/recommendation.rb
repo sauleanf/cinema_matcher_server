@@ -6,7 +6,6 @@ class Recommendation < ApplicationRecord
 
   has_many :recommendation_users, dependent: :destroy
   has_many :users, through: :interested_users
-
   has_many :recommendation_statuses, dependent: :destroy
 
   def confirm!(user)

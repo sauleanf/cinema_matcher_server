@@ -9,17 +9,11 @@ class SentFriendRequestsController < ApplicationController
   include PaginationHelper
 
   def index
-    render json: {
-      sent_friend_requests: FriendRequestDecorator.decorate_collection(@friend_requests),
-      page: page,
-      count: @friend_requests.total_count
-    }, status: :ok
+    render_records(@friend_requests)
   end
 
   def show
-    render json: {
-      sent_friend_request: @friend_request.decorate
-    }, status: :ok
+    render_record(@friend_request)
   end
 
   def create
@@ -28,9 +22,7 @@ class SentFriendRequestsController < ApplicationController
     if data.key?(:error)
       render json: data.fetch(:error), status: :unprocessable_entity
     else
-      render json: {
-        sent_friend_request: data.fetch(:friend_request).decorate
-      }, status: :ok
+      render_record(data.fetch(:friend_request))
     end
   end
 
