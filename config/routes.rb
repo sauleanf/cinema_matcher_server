@@ -30,6 +30,10 @@ Rails.application.routes.draw do
     scope 'friends' do
       get '', to: 'friends#index'
 
+      scope 'requests' do
+        get '/:id', to: 'friend_requests#show'
+      end
+
       scope 'sent' do
         get '', to: 'sent_friend_requests#index'
         post '', to: 'sent_friend_requests#create'
