@@ -5,7 +5,7 @@ class CreateRecommendationsJob < ApplicationJob
 
   def perform(room)
     recommendations = room.create_recommendations
-    decorated_recommendations = RecommendationDecorator.decorate_collection(recommendations).as_json
-    RoomChannel.broadcast_to(room, recommendations: decorated_recommendations)
+    decorated_recommendations = recommendations.decorate.as_json
+    RoomChannel.broadcast_to(room, type: RoomChannel::Types::CREATE_RECOMMENDATIONS, payload: decorated_recommendations)
   end
 end

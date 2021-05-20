@@ -44,7 +44,7 @@ describe PicturesController, type: :controller do
       picture
     }
 
-    include_examples 'filtering', :picture, create_picture
+    include_examples 'filtering', create_picture
   end
 
   describe 'GET show' do

@@ -52,7 +52,8 @@ RSpec.describe RoomChannel, type: :channel do
                 })
       end.to have_broadcasted_to(room)
         .from_channel(RoomChannel)
-        .with(confirmed_recommendations: decorated_recommendations.as_json)
+        .with(type: RoomChannel::Types::CONFIRMED,
+              payload: decorated_recommendations.as_json)
     end
   end
 end

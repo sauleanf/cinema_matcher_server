@@ -8,6 +8,8 @@ class Room < ApplicationRecord
   has_many :recommendation_statuses, through: :recommendations
 
   def create_recommendations
+    return recommendations unless recommendations.empty?
+
     recommendation_params = Picture.first(4).map do |picture|
       {
         room_id: id,

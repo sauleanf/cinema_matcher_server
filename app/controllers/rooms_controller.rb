@@ -3,7 +3,7 @@
 class RoomsController < ApplicationController
   before_action :authorized?
   before_action :users, only: %i[add create]
-  before_action :room, only: %i[show add]
+  before_action :room, only: %i[show add start]
   before_action :rooms, only: %i[index]
 
   include PaginationHelper
@@ -34,12 +34,16 @@ class RoomsController < ApplicationController
     @room.users << current_user
 
     if @room.save
-      CreateRecommendationsJob.perform_later(@room)
-
       render_record(@room)
     else
       render json: @room.errors, status: :unprocessable_entity
     end
+  end
+
+  def start
+    @job = CreateRecommendationsJob.perform_later(@room)
+
+    render json: @job, status: :ok
   end
 
   private

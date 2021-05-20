@@ -51,8 +51,11 @@ Rails.application.routes.draw do
 
     scope 'rooms' do
       post 'add', to: 'rooms#add'
+      post '/:id/start', to: 'rooms#start'
     end
   end
 
   post 'login', to: 'auth#login'
+
+  mount ActionCable.server, at: '/cable'
 end

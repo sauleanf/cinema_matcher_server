@@ -102,7 +102,7 @@ describe UsersController, type: :controller do
         user
       end
 
-      include_examples 'filtering', :user, create_user
+      include_examples 'filtering', create_user
     end
 
     describe 'GET show' do

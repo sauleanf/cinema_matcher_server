@@ -70,7 +70,7 @@ describe RoomsController, type: :controller do
                     **params)
       }
 
-      include_examples 'filtering', :room, create_room
+      include_examples 'filtering', create_room
     end
 
     describe 'GET show' do
@@ -116,12 +116,6 @@ describe RoomsController, type: :controller do
         expect(room.users).to include(user)
         expect(room.users).to include(second_user)
       end
-
-      it 'enqueues a CreateRecommendationsJob' do
-        expect(CreateRecommendationsJob).to receive(:perform_later).once
-
-        post :create, params: create_params
-      end
     end
 
     describe 'POST add' do
@@ -143,6 +137,16 @@ describe RoomsController, type: :controller do
         room.reload
 
         expect(response_body[:item]).to eq(room.decorate.as_json)
+      end
+    end
+
+    describe 'POST start' do
+      let!(:room) { Room.create(users: [user]) }
+
+      it 'enqueues a job' do
+        expect(CreateRecommendationsJob).to receive(:perform_later).once
+
+        post :start, params: { id: room.id }
       end
     end
   end

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_examples 'filtering' do |_type, create_record|
+shared_examples 'filtering' do |create_record|
   let!(:new_tag) { 'New' }
 
   context 'when one param is passed' do

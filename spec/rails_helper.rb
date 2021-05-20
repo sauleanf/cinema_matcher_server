@@ -72,6 +72,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include ActionCable::TestHelper
+  config.include ActiveJob::TestHelper
+
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end
