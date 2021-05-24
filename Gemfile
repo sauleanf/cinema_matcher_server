@@ -15,7 +15,7 @@ gem 'jwt', '~>2.2'
 gem 'kaminari', '~>1.2'
 gem 'omniauth-google-oauth2', '~>1.0'
 gem 'pg'
-gem 'puma', '~> 5.0', groups: %i[development test]
+gem 'puma', '~> 5.3', groups: %i[development test]
 gem 'rack-cors', '~>1.1'
 gem 'rails', '~> 6.1.3', '>= 6.1.3.1'
 gem 'redis', '~> 4.0'
