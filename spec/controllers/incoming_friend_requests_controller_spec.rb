@@ -23,7 +23,7 @@ describe IncomingFriendRequestsController, type: :controller do
 
     describe 'PUT accept' do
       it 'returns an error' do
-        put :accept
+        put :accept, params: { id: first_incoming_friend_request.id }
 
         expect_auth_to_fail
       end
@@ -31,7 +31,7 @@ describe IncomingFriendRequestsController, type: :controller do
 
     describe 'DELETE reject' do
       it 'returns an error' do
-        delete :reject
+        delete :reject, params: { id: first_incoming_friend_request.id }
 
         expect_auth_to_fail
       end
@@ -43,14 +43,18 @@ describe IncomingFriendRequestsController, type: :controller do
       login_user user
     end
 
+    let!(:serialized_friend_requests) do
+      [
+        HashWithIndifferentAccess.new(first_incoming_friend_request.decorate.as_json),
+        HashWithIndifferentAccess.new(second_incoming_friend_request.decorate.as_json)
+      ]
+    end
+
     describe 'GET index' do
       it 'returns the incoming pending friend requests belonging to the user' do
         get :index
 
-        expect(response_body).to include(first_incoming_friend_request.decorate.as_json)
-        expect(response_body).to include(second_incoming_friend_request.decorate.as_json)
-        expect(response_body).not_to include(redundant_friend_request.decorate.as_json)
-        expect(response_body).not_to include(unrelated_friend_request.decorate.as_json)
+        expect(response_body[:items]).to eq(serialized_friend_requests)
       end
     end
 

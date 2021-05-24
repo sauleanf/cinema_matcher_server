@@ -32,7 +32,7 @@ describe SentFriendRequestsController, type: :controller do
 
     describe 'DELETE rescind' do
       it 'returns an error' do
-        delete :rescind
+        delete :rescind, params: { id: first_friend_request.id }
 
         expect_auth_to_fail
       end
@@ -45,19 +45,23 @@ describe SentFriendRequestsController, type: :controller do
     end
 
     describe 'GET index' do
+      let!(:serialized_friend_requests) do
+        [
+          HashWithIndifferentAccess.new(first_friend_request.decorate.as_json),
+          HashWithIndifferentAccess.new(second_friend_request.decorate.as_json)
+        ]
+      end
+
       it 'returns the friend requests belonging to the user' do
         get :index
 
-        expect(response_body).to include(first_friend_request.decorate.as_json)
-        expect(response_body).to include(second_friend_request.decorate.as_json)
-        expect(response_body).not_to include(redundant_friend_request.decorate.as_json)
-        expect(response_body).not_to include(unrelated_friend_request.decorate.as_json)
+        expect(response_body[:items]).to eq(serialized_friend_requests)
       end
     end
 
     describe 'POST create' do
       it 'creates a friend request' do
-        post :create, params: { request: { other_user_id: fourth_user.id } }
+        post :create, params: { other_user: fourth_user.id }
 
         friend_request = FriendRequest.find_by(user: user, other_user: fourth_user)
 

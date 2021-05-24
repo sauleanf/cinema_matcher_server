@@ -2,50 +2,69 @@
 
 class RoomsController < ApplicationController
   before_action :authorized?
-  before_action :users, only: %i[add]
-  before_action :room, only: %i[show add]
+  before_action :users, only: %i[add create]
+  before_action :room, only: %i[show add start]
+  before_action :rooms, only: %i[index]
+
+  include PaginationHelper
+
+  FILTER_PARAMS = [:name].freeze
 
   def index
-    render json: current_user.rooms
+    render_records(@rooms)
   end
 
   def show
-    render json: @room.decorate
+    render_record(@room)
   end
 
   def add
     @room.users += @users
 
     if @room.save
-      render json: @room.decorate, status: :ok
+      render_record(@room)
     else
       render json: @room.errors, status: :unprocessable_entity
     end
   end
 
   def create
-    @room = Room.new(users: [current_user])
+    @room = Room.new(name: new_room_name)
+    @room.users = users
+    @room.users << current_user
 
     if @room.save
-      CreateRecommendationsJob.perform_later(@room)
-
-      render json: @room.decorate, status: :ok
+      render_record(@room)
     else
       render json: @room.errors, status: :unprocessable_entity
     end
   end
 
+  def start
+    @job = CreateRecommendationsJob.perform_later(@room)
+
+    render json: @job, status: :ok
+  end
+
   private
+
+  def new_room_name
+    params[:name] || 'My Room'
+  end
 
   def room
     @room = current_user.rooms.find(params[:id])
   end
 
+  def rooms
+    @rooms = paginate_record(current_user.rooms, FILTER_PARAMS)
+  end
+
   def users
-    @users = User.where(id: room_params[:user_ids])
+    @users = User.where(id: room_params[:users])
   end
 
   def room_params
-    params.require(:room).permit(:id, user_ids: [])
+    params.permit(:id, :name, users: [])
   end
 end

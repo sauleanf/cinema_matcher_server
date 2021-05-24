@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 class RoomChannel < ApplicationCable::Channel
+  module Types
+    CONFIRMED = 'confirmed'
+    CREATE_RECOMMENDATIONS = 'create_recommendations'
+  end
+
   def subscribed
     stream_for room
   end
@@ -16,9 +21,11 @@ class RoomChannel < ApplicationCable::Channel
     # checks if every one has either accepted or rejected their recommendations
     return unless room.completed?
 
-    recommendations = room.confirmed_recommendations
+    confirmed_recommendations = RecommendationDecorator.decorate_collection(room.confirmed_recommendations)
 
-    broadcast_to(room, confirmed_recommendations: RecommendationDecorator.decorate_collection(recommendations).as_json)
+    broadcast_to(room,
+                 type: Types::CONFIRMED,
+                 payload: confirmed_recommendations.as_json)
   end
 
   private

@@ -6,23 +6,27 @@ class RecommendationsController < ApplicationController
   before_action :recommendations, only: %i[index]
   before_action :recommendation, only: %i[show]
 
+  include PaginationHelper
+
   def index
-    render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
+    render_records(@recommendations)
   end
 
   def show
-    render json: @recommendation.decorate, status: :ok
+    render_record(@recommendation)
   end
 
   def create
     @recommendations = @room.create_recommendations
-    render json: RecommendationDecorator.decorate_collection(@recommendations), status: :ok
+    render json: {
+      items: @recommendations.decorate
+    }, status: :ok
   end
 
   private
 
   def recommendations
-    @recommendations = @room.recommendations
+    @recommendations = paginate_record(@room.recommendations)
   end
 
   def recommendation
@@ -35,6 +39,6 @@ class RecommendationsController < ApplicationController
   end
 
   def room_id
-    params.fetch(:room_id)
+    params.fetch(:room)
   end
 end

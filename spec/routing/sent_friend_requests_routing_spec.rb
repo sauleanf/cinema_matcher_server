@@ -13,7 +13,7 @@ RSpec.describe SentFriendRequestsController, type: :routing do
     end
 
     it 'routes to #rescind' do
-      expect(delete: '/api/v1/friends/sent').to route_to('sent_friend_requests#rescind')
+      expect(delete: '/api/v1/friends/sent/1').to route_to('sent_friend_requests#rescind', id: '1')
     end
   end
 end

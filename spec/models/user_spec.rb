@@ -33,7 +33,43 @@ RSpec.describe User, type: :model do
     user.reload
   end
 
-  context 'User#password' do
+  describe 'validate' do
+    it 'ensures that it has a valid email' do
+      new_user = User.new(fullname: 'John Doe', username: 'johndoe', email: 'bad email')
+      new_user.password = 'password2'
+
+      expect(new_user.valid?).to be(false)
+    end
+
+    it 'ensures that it has a password' do
+      new_user = User.new(fullname: 'John Doe', username: 'johndoe', email: 'fsaulean@gmail.com')
+
+      expect(new_user.valid?).to be(false)
+    end
+
+    it 'ensures that it has an username' do
+      new_user = User.new(fullname: 'John Doe', email: 'fsaulean@gmail.com')
+      new_user.password = 'password2'
+
+      expect(new_user.valid?).to be(false)
+    end
+
+    it 'ensures that it has a fullname' do
+      new_user = User.new(username: 'johndoe', email: 'fsaulean@gmail.com')
+      new_user.password = 'password2'
+
+      expect(new_user.valid?).to be(false)
+    end
+
+    it 'ensures that it has an unique email' do
+      new_user = User.new(fullname: 'John Doe', username: 'johndoe', email: user.email)
+      new_user.password = 'password2'
+
+      expect(new_user.valid?).to be(false)
+    end
+  end
+
+  describe '#password' do
     let!(:new_password) { 'new_password' }
 
     it 'overrides the user password' do
@@ -42,7 +78,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context 'User#send_friend_request' do
+  describe '#send_friend_request' do
     it 'creates a friend request' do
       user.send_friend_request(other_user)
       friend_request = FriendRequest.last
@@ -50,7 +86,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context 'User#send_friend_request' do
+  describe '#send_friend_request' do
     before do
       user.send_friend_request(other_user)
     end
@@ -62,7 +98,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context 'User#accept_friend_request' do
+  describe '#accept_friend_request' do
     let!(:friend_request) { FriendRequest.create(user: user, other_user: other_user) }
 
     before do
@@ -83,7 +119,7 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context 'User#rooms' do
+  describe '#rooms' do
     let(:room) { Room.create(users: [user]) }
 
     before do
@@ -95,13 +131,13 @@ RSpec.describe User, type: :model do
     end
   end
 
-  context 'User#sent_pending_friend_requests' do
+  describe '#sent_pending_friend_requests' do
     it 'shows all of the sent pending friend requests' do
       expect(user.sent_pending_friend_requests).to match_array(sent_pending_friend_requests)
     end
   end
 
-  context 'User#incoming_sent_friend_requests' do
+  describe '#incoming_sent_friend_requests' do
     it 'shows all of the sent pending friend requests' do
       expect(user.incoming_pending_friend_requests).to match_array(incoming_pending_friend_requests)
     end

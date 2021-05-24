@@ -6,8 +6,14 @@ class SentFriendRequestsController < ApplicationController
   before_action :friend_requests, only: %i[index]
   before_action :other_user, only: %i[create]
 
+  include PaginationHelper
+
   def index
-    render json: FriendRequestDecorator.decorate_collection(friend_requests), status: :ok
+    render_records(@friend_requests)
+  end
+
+  def show
+    render_record(@friend_request)
   end
 
   def create
@@ -16,24 +22,26 @@ class SentFriendRequestsController < ApplicationController
     if data.key?(:error)
       render json: data.fetch(:error), status: :unprocessable_entity
     else
-      render json: data.fetch(:friend_request).decorate, status: :ok
+      render_record(data.fetch(:friend_request))
     end
   end
 
   def rescind
     @friend_request.status = FriendRequest::Status::RESCINDED
     @friend_request.save!
-    render json: friend_request.decorate, status: :ok
+    render json: {
+      sent_friend_request: friend_request.decorate
+    }, status: :ok
   end
 
   private
 
   def other_user
-    @other_user = User.find(friend_request_params[:other_user_id])
+    @other_user = User.find(friend_request_params[:other_user])
   end
 
   def friend_requests
-    @friend_requests = current_user.sent_pending_friend_requests
+    @friend_requests = paginate_record(current_user.sent_pending_friend_requests)
   end
 
   def friend_request
@@ -41,6 +49,6 @@ class SentFriendRequestsController < ApplicationController
   end
 
   def friend_request_params
-    params.require(:request).permit(:other_user_id)
+    params.permit(:other_user)
   end
 end

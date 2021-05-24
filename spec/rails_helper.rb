@@ -41,6 +41,8 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
+  Dir[Rails.root.join('spec/support/shared_examples/*.rb')].sort.each { |f| require f }
+
   Aws.config.update(stub_responses: true)
 
   # If you're not using ActiveRecord, or you'd prefer not to run each of your
@@ -70,6 +72,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
 
   config.include ActionCable::TestHelper
+  config.include ActiveJob::TestHelper
+
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
 end

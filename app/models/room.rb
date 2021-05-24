@@ -3,16 +3,22 @@
 class Room < ApplicationRecord
   has_many :room_users, dependent: :destroy
   has_many :users, through: :room_users
-
   has_many :recommendation_users, dependent: :destroy
   has_many :recommendations, dependent: :destroy
-
   has_many :recommendation_statuses, through: :recommendations
 
   def create_recommendations
-    Picture.first(4).map do |picture|
-      Recommendation.create(room: self, picture: picture)
+    return recommendations unless recommendations.empty?
+
+    recommendation_params = Picture.first(4).map do |picture|
+      {
+        room_id: id,
+        picture_id: picture.id
+      }
     end
+    Recommendation.create(recommendation_params)
+
+    recommendations
   end
 
   # Checks to see if all recommendations have been considered

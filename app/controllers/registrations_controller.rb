@@ -1,29 +1,29 @@
 # frozen_string_literal: true
 
 class RegistrationsController < ApplicationController
-  before_action :authorized?, only: %i[update show]
-  before_action :registration, only: %i[update show]
+  before_action :authorized?, only: %i[update index]
+  before_action :registration, only: %i[update index]
 
-  def show
-    render json: @registration.decorate
+  def index
+    render_record(@registration)
   end
 
   def update
     if @registration.code == submitted_code
-      registration.confirm!
+      @registration.confirm!
 
       RegistrationMailer.with(user: @current_user).confirmed_email.deliver_later
 
-      render json: { message: Messages::REGISTRATION_COMPLETED }, status: :ok
+      render_record(@registration)
     else
-      render json: { message: Messages::REGISTRATION_FAILED }, status: :unprocessable_entity
+      render json: { code: Messages::REGISTRATION_FAILED }, status: :unprocessable_entity
     end
   end
 
   private
 
   def registration
-    @registration = @current_user.registration
+    @registration = Registration.find_by(user: current_user)
   end
 
   def submitted_code

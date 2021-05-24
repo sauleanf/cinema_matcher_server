@@ -9,18 +9,15 @@ class User < ApplicationRecord
   validates :hashed_password, presence: true
   validates :username, presence: true
   validates :email, format: { with: URI::MailTo::EMAIL_REGEXP }, presence: true
+  validates :email, uniqueness: true
 
   has_many :room_users, dependent: :destroy
   has_many :rooms, through: :room_users
-
   has_many :friendships, foreign_key: :first_user_id, inverse_of: :second_user, dependent: :destroy
   has_many :friends, class_name: 'User', through: :friendships, source: :second_user
-
   has_many :friend_requests, dependent: :destroy
   has_many :pending_friends, class_name: 'User', through: :friend_requests
-
   has_many :recommendation_statuses, dependent: :destroy
-
   has_one :registration, dependent: :destroy
 
   def password
@@ -35,7 +32,7 @@ class User < ApplicationRecord
   def send_friend_request(other_user)
     friend_request = FriendRequest.new(user: self, other_user: other_user)
 
-    return { error: friend_requests.errors } unless friend_request.save
+    return { error: friend_request.errors } unless friend_request.save
 
     { friend_request: friend_request }
   end

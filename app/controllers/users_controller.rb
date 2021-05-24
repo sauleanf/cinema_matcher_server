@@ -1,10 +1,19 @@
 # frozen_string_literal: true
 
 class UsersController < ApplicationController
-  before_action :authorized?, only: %i[index edit friends]
+  before_action :authorized?, only: %i[index show edit]
+  before_action :users, only: [:index]
+
+  include PaginationHelper
+
+  FILTER_PARAMS = %i[fullname username].freeze
 
   def index
-    render json: current_user.decorate, status: :ok
+    render_records(@users)
+  end
+
+  def show
+    render_record(@current_user)
   end
 
   def create
@@ -13,10 +22,11 @@ class UsersController < ApplicationController
 
     if @user.save
       Registration.create(user: @user)
+      token = JsonWebToken.encode(user_id: @user.id)
 
       RegistrationMailer.with(user: @user).welcome_email.deliver_later
 
-      render json: @user.decorate, status: :ok
+      render_record(@user, token: token)
     else
       render json: @user.errors, status: :unprocessable_entity
     end
@@ -26,23 +36,29 @@ class UsersController < ApplicationController
     current_user.assign_attributes(user_params)
 
     if current_user.save
-      render json: current_user.decorate, status: :ok
+      render_record(current_user)
     else
-      render json: current_user.errors, status: :unprocessable_entity
+      render json: {
+        user: current_user.errors
+      }, status: :unprocessable_entity
     end
-  end
-
-  def friends
-    render json: UserDecorator.decorate_collection(current_user.friends), status: :ok
   end
 
   private
 
+  def users
+    @users = paginate_record(User, FILTER_PARAMS)
+  end
+
+  def page
+    @page ||= Integer(params[:page] || 1)
+  end
+
   def user_params
-    params.require(:user).permit(:username, :email, :fullname)
+    params.permit(:username, :email, :fullname)
   end
 
   def create_user_params
-    params.require(:user).permit(:username, :email, :fullname, :password)
+    params.permit(:username, :email, :fullname, :password)
   end
 end

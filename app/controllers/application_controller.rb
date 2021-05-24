@@ -2,9 +2,28 @@
 
 class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :record_not_found
+  protect_from_forgery with: :null_session
 
   def record_not_found
     render json: { message: Messages::RECORD_NOT_FOUND }, status: :not_found
+  end
+
+  def render_records(items, kwargs = {})
+    body = {
+      items: items.decorate,
+      page: page,
+      count: items.total_count,
+      **kwargs
+    }
+    render json: body, status: :ok
+  end
+
+  def render_record(item, kwargs = {})
+    body = {
+      item: item.decorate,
+      **kwargs
+    }
+    render json: body, status: :ok
   end
 
   def encode_token(payload)
@@ -44,5 +63,10 @@ class ApplicationController < ActionController::Base
 
   def secret
     @secret ||= Rails.application.secrets.secret_key_base
+  end
+
+  # To be used for controllers with the pagination helper
+  def page
+    Integer(params[:page] || 1)
   end
 end

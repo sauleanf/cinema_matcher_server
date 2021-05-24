@@ -7,6 +7,10 @@ describe RoomsController, type: :controller do
   let(:second_user) { create(:user) }
   let(:third_user) { create(:user) }
 
+  before do
+    ActiveJob::Base.queue_adapter = :test
+  end
+
   context 'when not authenticated' do
     describe 'GET index' do
       it 'returns an error' do
@@ -40,33 +44,47 @@ describe RoomsController, type: :controller do
 
     let(:num_rooms) { 5 }
     let!(:rooms) do
-      num_rooms.times.map do
-        Room.create(users: [user, second_user])
+      num_rooms.times.map do |i|
+        Room.create(name: "Room #{i + 1}", users: [user, second_user])
       end
     end
+
     let!(:other_rooms) do
-      num_rooms.times.map do
-        Room.create(users: [second_user, third_user])
+      num_rooms.times.map do |i|
+        Room.create(name: "Other Room #{i + 1}", users: [second_user, third_user])
       end
     end
 
     describe 'GET index' do
+      let!(:name) { 'My New Room' }
+
       it 'only shows the users room' do
         get :index
 
-        expect(response_body).to eq(rooms.as_json)
+        expect(response_body[:items]).to eq(RoomDecorator.decorate_collection(rooms).as_json)
       end
+
+      create_room = lambda { |params, suffix = 'suffix'|
+        Room.create(name: "dummy_#{suffix}@gmail.com",
+                    users: [User.first, User.last],
+                    **params)
+      }
+
+      include_examples 'filtering', create_room
     end
 
     describe 'GET show' do
       let(:room) { rooms.first }
       let(:other_room) { other_rooms.first }
+      let(:error_res) do
+        HashWithIndifferentAccess.new({ message: Messages::RECORD_NOT_FOUND })
+      end
 
       context 'when the user is in the room' do
         it 'shows the room' do
           get :show, params: { id: room.id }
 
-          expect(response_body).to eq(room.decorate.as_json)
+          expect(response_body[:item]).to eq(room.decorate.as_json)
         end
       end
 
@@ -74,26 +92,29 @@ describe RoomsController, type: :controller do
         it 'does not show the room' do
           get :show, params: { id: other_room.id }
 
-          expect_message(Messages::RECORD_NOT_FOUND)
+          expect(response_body).to eq(error_res)
         end
       end
     end
 
     describe 'POST create' do
+      let!(:create_params) do
+        HashWithIndifferentAccess.new({
+                                        name: 'My Room',
+                                        users: [second_user.id]
+                                      })
+      end
+
       it 'creates a new room with the right data' do
         expect do
-          post :create
+          post :create, params: create_params
         end.to change(Room, :count).by(1)
 
         room = Room.last
 
+        expect(room.name).to eq(create_params[:name])
         expect(room.users).to include(user)
-      end
-
-      it 'enqueues a CreateRecommendationsJob' do
-        expect(CreateRecommendationsJob).to receive(:perform_later).once
-
-        post :create
+        expect(room.users).to include(second_user)
       end
     end
 
@@ -102,7 +123,7 @@ describe RoomsController, type: :controller do
       let!(:third_user) { create(:user) }
 
       it 'adds the user to the room' do
-        post :add, params: { id: room.id, room: { user_ids: [second_user.id, third_user.id] } }
+        post :add, params: { id: room.id, users: [second_user.id, third_user.id] }
 
         room.reload
 
@@ -112,10 +133,20 @@ describe RoomsController, type: :controller do
       end
 
       it 'returns room' do
-        post :add, params: { id: room.id, room: { user_ids: [second_user.id] } }
+        post :add, params: { id: room.id, users: [second_user.id] }
         room.reload
 
-        expect(response_body).to eq(room.decorate.as_json)
+        expect(response_body[:item]).to eq(room.decorate.as_json)
+      end
+    end
+
+    describe 'POST start' do
+      let!(:room) { Room.create(users: [user]) }
+
+      it 'enqueues a job' do
+        expect(CreateRecommendationsJob).to receive(:perform_later).once
+
+        post :start, params: { id: room.id }
       end
     end
   end

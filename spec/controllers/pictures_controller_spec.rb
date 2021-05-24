@@ -27,7 +27,7 @@ describe PicturesController, type: :controller do
         get :index, params: { page: page }
 
         pictures = PictureDecorator.decorate_collection(pages_of_pictures[i])
-        received_pictures = response_body.fetch(:pictures)
+        received_pictures = response_body.fetch(:items)
 
         expect(received_pictures.size).to eq(per_page)
         expect(received_pictures).to eq(pictures.as_json)
@@ -35,6 +35,16 @@ describe PicturesController, type: :controller do
 
       expect(page).to eq(num_pages)
     end
+
+    create_picture = lambda { |params, suffix = 'suffix'|
+      picture = Picture.create(name: "My Movie #{suffix}",
+                               description: 'My Big Cool Movie',
+                               released_at: DateTime.now)
+      picture.update(**params)
+      picture
+    }
+
+    include_examples 'filtering', create_picture
   end
 
   describe 'GET show' do
@@ -43,7 +53,7 @@ describe PicturesController, type: :controller do
     it 'returns an error' do
       get :show, params: { id: picture.id }
 
-      expect(response_body).to eq(picture.decorate.as_json)
+      expect(response_body[:item]).to eq(picture.decorate.as_json)
     end
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_11_003007) do
+ActiveRecord::Schema.define(version: 2021_05_17_161751) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,6 +63,7 @@ ActiveRecord::Schema.define(version: 2021_05_11_003007) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "status", default: "pending"
+    t.index ["user_id", "other_user_id"], name: "index_friend_requests_on_user_id_and_other_user_id", unique: true
   end
 
   create_table "friendships", force: :cascade do |t|
@@ -70,6 +71,7 @@ ActiveRecord::Schema.define(version: 2021_05_11_003007) do
     t.integer "second_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["first_user_id", "second_user_id"], name: "index_friendships_on_first_user_id_and_second_user_id", unique: true
   end
 
   create_table "pictures", force: :cascade do |t|
@@ -140,6 +142,7 @@ ActiveRecord::Schema.define(version: 2021_05_11_003007) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.boolean "confirmed_email", default: false
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
 end

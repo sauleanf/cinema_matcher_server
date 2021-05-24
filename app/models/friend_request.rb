@@ -1,19 +1,20 @@
 # frozen_string_literal: true
 
 class FriendRequest < ApplicationRecord
-  module Status
-    ACCEPTED = 'accepted'
-    PENDING = 'pending'
-    REJECTED = 'rejected'
-    RESCINDED = 'rescinded'
-  end
-
   belongs_to :user
   belongs_to :other_user, class_name: 'User'
 
   validates :user, presence: true
   validates :other_user, presence: true
   validate :request_not_reflexive
+  validates :user, uniqueness: { scope: :other_user }
+
+  module Status
+    ACCEPTED = 'accepted'
+    PENDING = 'pending'
+    REJECTED = 'rejected'
+    RESCINDED = 'rescinded'
+  end
 
   def request_not_reflexive
     errors.add(:other_user, 'Cannot friend themself') if user == other_user
